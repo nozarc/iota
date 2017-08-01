@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
+/** 
 *  
 */
 class Create_db extends CI_Model
