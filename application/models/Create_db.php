@@ -70,9 +70,47 @@ class Create_db extends CI_Model
 			name varchar(20),
 			href text,
 			class text,
+			class_2 text,
 			parent int(5),
 			owner enum("admin","headmaster","teacher","officer","student")
 			)');
+
+		$this->db->query('create table if not exists'.$prefix.'analyze(
+			id int(5) primary key auto_increment,
+			subjects varchar(50),
+			test_type varchar(50),
+			grade_scale enum(4,10,100),
+			min_grade int(3),
+			test_date date,
+			test_correction_date date,
+			test_report_date date,
+			report_location varchar(50)
+			)');
+
+		$this->db->query('create table if not exists'.$prefix.'test_questions(
+			id int(5) primary key auto_increment,
+			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
+			q_number int(3),
+			question text,
+			answer_key varchar(2),
+			measured_capability text,
+			)');
+//		belum selesai 
+		$this->db->query('create table if not exists'.$prefix.'question_answers(
+			id int(5) primary key auto_increment,
+			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
+			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
+			q_id int(5), foreign key(q_id) references '.$prefix.'test_questions(id) on update cascade,
+			q_number int(3),
+			answer varchar(1),
+			)');
+		$this->db->query('create table if not exists'.$prefix.'test_grade(
+			id int(5) primary key auto_increment,
+			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
+			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
+			grade int(3)
+		)');
+/**/
 	}
 	public function c_admin($prefix='')
 	{

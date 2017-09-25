@@ -107,20 +107,23 @@ $config['sidebar']=array(
 			'name' =>'Home',
 			'href' =>'admin',
 			'class' =>'fa fa-home',
+			'class_2'	=>null,
 			'parent' =>1,
 			'owner' =>'admin'
 			),
 		array(
-			'name' =>'Users',
-			'href' =>null,
-			'class' =>'fa fa-users',
-			'parent' =>2,
-			'owner' =>'admin'
+			'name' 		=>'Users',
+			'href' 		=>null,
+			'class' 	=>'fa fa-users',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' 	=>2,
+			'owner' 	=>'admin'
 			),
 		array(
 			'name' =>'School Data',
 			'href' =>null,
 			'class' =>'fa fa-university',
+			'class_2'	=>'fa fa-chevron-down',
 			'parent' =>3,
 			'owner' =>'admin'
 			),
@@ -128,6 +131,7 @@ $config['sidebar']=array(
 			'name' =>'Home',
 			'href' =>'teacher',
 			'class' =>'fa fa-home',
+			'class_2'	=>null,
 			'parent' =>4,
 			'owner' =>'teacher'
 			),
@@ -135,6 +139,7 @@ $config['sidebar']=array(
 			'name' =>'Analyze Items',
 			'href' =>null,
 			'class' =>'fa fa-cogs',
+			'class_2'	=>'fa fa-chevron-down',
 			'parent' =>5,
 			'owner' =>'teacher'
 			),

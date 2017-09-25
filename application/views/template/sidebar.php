@@ -39,7 +39,7 @@
                       {
                       ?>
                         <a href="<?php echo empty($v->href)?'#':base_url($v->href);?>">
-                          <i class="<?php echo $v->class;?>"></i><?php echo $v->name;?><span class="fa fa-chevron-down"></span>
+                          <i class="<?php echo $v->class;?>"></i><?php echo $v->name;?><span class="<?php echo $v->class_2; ?>"></span>
                         </a>
                         <ul class='nav child_menu'>
                       <?php
