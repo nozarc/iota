@@ -39,11 +39,12 @@ class Admin extends CI_Controller
 		$this->form_validation->set_rules('uid','UID','required|integer');
 		$this->form_validation->set_rules('password','Password','matches[passwordconf]');
 		$this->form_validation->set_rules('passwordconf','Password Confirmation','matches[password]');
-	//	$this->form_validation->set_rules('fullname','Name','callback_check_headmaster_name');
+	/*	$this->form_validation->set_rules('fullname','Name','callback_check_headmaster_name');
 	//	$this->form_validation->set_rules('identity_number','Identity Number','is_natural');
 	//	$this->form_validation->set_rules('gender','Gender','alpha');
 	//	$this->form_validation->set_rules('email','Email','valid_email');
 	//	$this->form_validation->set_rules('phone_num','Phone Number','numeric');
+	*/
 		if ($this->form_validation->run())
 		{
 			if (empty($this->input->post('password',true))) {
@@ -100,7 +101,7 @@ class Admin extends CI_Controller
 					'userphoto'			=>$this->input->post('userphoto',true),
 					'email'				=>$this->input->post('email',true)
 				);
-			$data['lol']=$this->users->insert($user,$person);
+			$this->users->insert($user,$person);
 		}
 		$this->template->display('adduser',$data);
 	}
@@ -314,7 +315,7 @@ class Admin extends CI_Controller
 							$data['lol']=$this->upload->data();
 							$logo=$this->config->item('template').'/images/'.$this->upload->data()['file_name'];
 							$this->schooldata->update(array('schoollogo'=>$logo));
-							redirect($sess_level.'/schooldata','refresh');
+							redirect($sess_level.'/schooldata/','refresh');
 						}
 						else
 						{

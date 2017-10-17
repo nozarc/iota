@@ -94,6 +94,8 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+/*don't touch this if you're not know what do you do */
 $config['createdb']=array(
 		'hostname'	=>$db['default']['hostname'],
 		'username'	=>$db['default']['username'],

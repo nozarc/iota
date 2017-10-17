@@ -28,6 +28,13 @@
     <link href="<?php echo $_tpath;?>/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo $_tpath;?>/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
+    <!-- Ion.RangeSlider -->
+    <link href="<?php echo $_tpath;?>/vendors/normalize-css/normalize.css" rel="stylesheet">
+    <link href="<?php echo $_tpath;?>./vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="<?php echo $_tpath;?>/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <!-- Bootstrap Colorpicker -->
+    <link href="<?php echo $_tpath;?>/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
     <!-- bootstrap-wysiwyg -->
     <link href="<?php echo $_tpath;?>/vendors/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
 
@@ -47,3 +54,4 @@
     <script src="<?php echo $_tpath;?>/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="<?php echo $_tpath;?>/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    

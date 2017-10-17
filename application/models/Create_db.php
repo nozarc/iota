@@ -29,6 +29,7 @@ class Create_db extends CI_Model
 	public function c_table($prefix='')
 	{
 		$this->db->query("use ".$this->db->dtbase);
+//		admin stuffs		
 		$this->db->query('create table if not exists '.$prefix.'log(
 			id int(5) primary key auto_increment,
 			angka1 int(5), 
@@ -74,42 +75,51 @@ class Create_db extends CI_Model
 			parent int(5),
 			owner enum("admin","headmaster","teacher","officer","student")
 			)');
+//		end of admin stuffs		
 
-		$this->db->query('create table if not exists'.$prefix.'analyze(
+//		analyze tables
+		$this->db->query('create table if not exists '.$prefix.'score_scale(
+			id int(5) primary key auto_increment,
+			scores int (5)
+			)');
+		$this->db->query('create table if not exists '.$prefix.'analyze(
 			id int(5) primary key auto_increment,
 			subjects varchar(50),
 			test_type varchar(50),
-			grade_scale enum(4,10,100),
-			min_grade int(3),
+			score_scale int(5), foreign key(score_scale) references '.$prefix.'score_scale(id) on update cascade,
+			min_score int(5),
 			test_date date,
 			test_correction_date date,
 			test_report_date date,
 			report_location varchar(50)
 			)');
 
-		$this->db->query('create table if not exists'.$prefix.'test_questions(
+		$this->db->query('create table if not exists '.$prefix.'test_questions(
 			id int(5) primary key auto_increment,
 			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
 			q_number int(3),
 			question text,
 			answer_key varchar(2),
-			measured_capability text,
+			measured_capability text
 			)');
-//		belum selesai 
-		$this->db->query('create table if not exists'.$prefix.'question_answers(
+
+		$this->db->query('create table if not exists '.$prefix.'question_answers(
 			id int(5) primary key auto_increment,
 			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
 			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
-			q_id int(5), foreign key(q_id) references '.$prefix.'test_questions(id) on update cascade,
-			q_number int(3),
-			answer varchar(1),
+			quest_id int(5), foreign key(quest_id) references '.$prefix.'test_questions(id) on update cascade,
+			quest_number int(3),
+			answer varchar(1)
 			)');
-		$this->db->query('create table if not exists'.$prefix.'test_grade(
+
+		$this->db->query('create table if not exists '.$prefix.'test_scores(
 			id int(5) primary key auto_increment,
 			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
 			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
-			grade int(3)
-		)');
+			scores int(3)
+			)');
+//		end of analyze tables
+
 /**/
 	}
 	public function c_admin($prefix='')
@@ -144,6 +154,19 @@ class Create_db extends CI_Model
 			$this->db->insert_batch($prefix.'sidebar',$sidebar);
 		}
 	}
+	public function c_analyze($prefix='')
+	{
+		$scores=array
+				(
+					array('scores' => 4),
+					array('scores' => 10),
+					array('scores' => 100)
+				);
+		if($this->db->get($prefix.'score_scale')->num_rows()==0)
+		{
+			$this->db->insert_batch($prefix.'score_scale',$scores);
+		}
+	}
 	public function install_db()
 	{
 		if ($this->cek_db()==false) 
@@ -153,6 +176,7 @@ class Create_db extends CI_Model
 		$this->c_table($this->db->dbprefix);
 		$this->c_admin($this->db->dbprefix);
 		$this->c_sidebar($this->db->dbprefix);
+		$this->c_analyze($this->db->dbprefix);
 
 //		$this->db->query('create table if not exists tes1(id int(5) primary key auto_increment,nama varchar(20),status enum("active","disactive") default "active")');
 		//$non=$this->db->dbprefix;
