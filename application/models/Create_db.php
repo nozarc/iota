@@ -84,7 +84,8 @@ class Create_db extends CI_Model
 			)');
 		$this->db->query('create table if not exists '.$prefix.'analyze(
 			id int(5) primary key auto_increment,
-			subjects varchar(50),
+			teacher_id int(5), foreign key(teacher_id) references '.$prefix.'user(uid) on update cascade,
+			subject varchar(50),
 			test_type varchar(50),
 			score_scale int(5), foreign key(score_scale) references '.$prefix.'score_scale(id) on update cascade,
 			min_score int(5),

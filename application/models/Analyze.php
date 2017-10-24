@@ -14,5 +14,14 @@ class Analyze extends CI_Model
 	public function get_score_scale($val=null)
 		{
 			return $this->db->get($this->db->dbprefix.'score_scale');
+		}
+	public function new($data=null)
+		{
+			$this->db->insert($this->db->dbprefix.'analyze',$data);
+			return true;
+		}
+	public function get($where=null)
+		{
+			return $this->db->get_where($this->db->dbprefix.'analyze',$where);
 		}	
 }

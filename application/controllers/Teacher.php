@@ -22,22 +22,41 @@ class Teacher extends CI_Controller
 		$data=$_SESSION;
 		$this->template->display('index',$data);
 	}
-	public function newanalyze($value='')
+	public function newanalyze($step='step_one')
 	{
+		extract($_SESSION);
 		$data=$_SESSION;
-		$data['score_scale']=$this->analyze->get_score_scale()->result();
-		$this->form_validation->set_rules('subject','Subject','required');
-		$this->form_validation->set_rules('test_type','Test Type','required');
-		$this->form_validation->set_rules('score_scale','Score Scale','required|numeric');
-		$this->form_validation->set_rules('min_score','Minimum Score','required|numeric');
-	//	$this->form_validation->set_rules('test_date','Test Date','alpha_dash');
-	//	$this->form_validation->set_rules('test_correction_date','Correction Date','alpha_dash');
-	//	$this->form_validation->set_rules('test_report_date','Test Report Date','alpha_dash');
-		$this->form_validation->set_rules('report_location','Report Location','required');
-		if ($this->form_validation->run()) {
-			$data['lol']=$this->input->post(null,true);
+		switch ($step) {
+			case 'step_one':
+				$data['score_scale']=$this->analyze->get_score_scale()->result();
+				$this->form_validation->set_rules('subject','Subject','required');
+				$this->form_validation->set_rules('test_type','Test Type','required');
+				$this->form_validation->set_rules('score_scale','Score Scale','required|numeric');
+				$this->form_validation->set_rules('min_score','Minimum Score','required|numeric');
+				$this->form_validation->set_rules('test_date','Test Date','alpha_dash');
+				$this->form_validation->set_rules('test_correction_date','Correction Date','alpha_dash');
+				$this->form_validation->set_rules('test_report_date','Test Report Date','alpha_dash');
+				$this->form_validation->set_rules('report_location','Report Location','required');
+				if ($this->form_validation->run()) {
+					$st1=$this->input->post(null,true);
+					$st1['teacher_id']=$_SESSION['sess_uid'];
+					$this->analyze->new($st1);
+					$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;
+					redirect($sess_level.'/newanalyze/step_two');
+				}
+				$this->template->display('newanalyze_st1',$data);
+				break;
+			case 'step_two':
+			//	if (empty($st1_id)) {
+			//		redirect($sess_level.'/newanalyze');
+			//	}
+				$data['lol']=$sess_level;
+				$this->template->display('newanalyze_st2',$data);
+				break;
+			default:
+				# code...
+				break;
 		}
-		$this->template->display('newanalyze',$data);
 	}
 
 public function profile($hal='view',$done=null)
