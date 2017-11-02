@@ -41,18 +41,33 @@ class Teacher extends CI_Controller
 					$st1=$this->input->post(null,true);
 					$st1['teacher_id']=$_SESSION['sess_uid'];
 					$this->analyze->new($st1);
-					$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;
+					$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;//tambah tgl ujian, biar lebih valid
 					redirect($sess_level.'/newanalyze/step_two');
 				}
 				$this->template->display('newanalyze_st1',$data);
 				break;
 			case 'step_two':
-			//	if (empty($st1_id)) {
-			//		redirect($sess_level.'/newanalyze');
-			//	}
-				$data['lol']=$sess_level;
-				$this->template->display('newanalyze_st2',$data);
+				if (empty($st1_id)) {
+					redirect($sess_level.'/newanalyze');
+				}
+				$answerskey=$this->input->post('answer_key',true);
+				$questions=$this->input->post('question',true);
+				$measured_capabilities=$this->input->post('measured_capability',true);
+				if (!empty($answerskey)) {
+					foreach ($answerskey as $k => $value) {
+						$this->form_validation->set_rules('answer_key['.$k.']','Answer Key No '.$k,'alpha|required|max_length[1]');
+					}
+				}
+				if ($this->form_validation->run()) {
+					$ins=$this->analyze->ins_questions($this->input->post(null,true),$st1_id);
+					redirect($sess_level.'/newanalyze/step_three');
+				}
+				$this->template->display('newanalyze_st2',$data);//perbaiki step_one, jadi ketika nekan back, data st1 ga hilang
 				break;
+			case 'step_three':
+				$this->template->display('newanalyze_st3',$data);
+				break;
+
 			default:
 				# code...
 				break;

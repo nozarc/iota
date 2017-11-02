@@ -23,5 +23,33 @@ class Analyze extends CI_Model
 	public function get($where=null)
 		{
 			return $this->db->get_where($this->db->dbprefix.'analyze',$where);
-		}	
+		}
+	public function ins_questions($value=null,$id=null)
+	{
+		$questions=$this->batch_builder($value,$id);
+		$this->db->insert_batch($this->db->dbprefix.'test_questions',$questions);
+		return true;
+	}
+	public function batch_builder($val=null,$id=null)
+		{
+			if($val!=null)
+			{
+				$arr=array();
+				$arrcount=count($val['answer_key']);
+				for ($arrnum=1; $arrnum <= $arrcount; $arrnum++) { 
+					$arrx=array();
+					$arrx['id_analyze']=$id;
+					$arrx['q_number']=$arrnum;
+					$arrx['answer_key']=$val['answer_key'][$arrnum];
+					$arrx['question']=$val['question'][$arrnum];
+					$arrx['measured_capability']=$val['measured_capability'][$arrnum];
+					array_push($arr,$arrx);
+				}
+				return $arr;
+			}
+			else 
+			{
+				return false;
+			}
+		}
 }
