@@ -340,7 +340,7 @@ class Admin extends CI_Controller
 				break;
 			case 'edit':
 				$data['classid']=$id;
-				$data['classname']=$this->schooldata->classes('getclass',$id)->classname;
+				$data['classname']=$this->schooldata->classes('getaclass',$id)->classname;
 				$data['classes']=$this->schooldata->classes();
 				$data['unlistedstudent']=$this->schooldata->classes('getunlisted','student');
 				$data['unlistedteacher']=$this->schooldata->classes('getunlisted','teacher');

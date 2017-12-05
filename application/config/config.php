@@ -25,7 +25,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
 /*
-| your template folder, it will be usefull for determine your template folder and its view
+| the state of this application. change it to 'development' when this application under development, and dont forget to change it to 'production' if this application is ready to use
+*/
+$config['state']='development';
+/*
+| your template folder, it will be usefull for determine your template folder and its view page
 */
 $config['template_dir'] = FCPATH.'template/';
 $config['template'] = $config['base_url'].'template/';

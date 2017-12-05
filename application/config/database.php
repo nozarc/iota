@@ -110,7 +110,7 @@ $config['sidebar']=array(
 			'href' =>'admin',
 			'class' =>'fa fa-home',
 			'class_2'	=>null,
-			'parent' =>1,
+			'parent' =>'1',
 			'owner' =>'admin'
 			),
 		array(
@@ -118,7 +118,7 @@ $config['sidebar']=array(
 			'href' 		=>null,
 			'class' 	=>'fa fa-users',
 			'class_2'	=>'fa fa-chevron-down',
-			'parent' 	=>2,
+			'parent' 	=>'2',
 			'owner' 	=>'admin'
 			),
 		array(
@@ -126,7 +126,7 @@ $config['sidebar']=array(
 			'href' =>null,
 			'class' =>'fa fa-university',
 			'class_2'	=>'fa fa-chevron-down',
-			'parent' =>3,
+			'parent' =>'3',
 			'owner' =>'admin'
 			),
 		array(
@@ -134,7 +134,7 @@ $config['sidebar']=array(
 			'href' =>'teacher',
 			'class' =>'fa fa-home',
 			'class_2'	=>null,
-			'parent' =>4,
+			'parent' =>'4',
 			'owner' =>'teacher'
 			),
 		array(
@@ -142,56 +142,56 @@ $config['sidebar']=array(
 			'href' =>null,
 			'class' =>'fa fa-cogs',
 			'class_2'	=>'fa fa-chevron-down',
-			'parent' =>5,
+			'parent' =>'5',
 			'owner' =>'teacher'
 			),
 		array(
 			'name' =>'View Users',
 			'href' =>'admin/viewusers',
 			'class' =>null,
-			'parent' =>2,
+			'parent' =>'2',
 			'owner' =>'admin'
 			),
 		array(
 			'name' =>'Add User',
 			'href' =>'admin/adduser',
 			'class' =>null,
-			'parent' =>2,
+			'parent' =>'2',
 			'owner' =>'admin'
 			),
 		array(
 			'name' =>'Your Profile',
 			'href' =>'admin/profile',
 			'class' =>null,
-			'parent' =>2,
+			'parent' =>'2',
 			'owner' =>'admin'
 			),
 		array(
 			'name' =>'School Data',
 			'href' =>'admin/schooldata',
 			'class' =>null,
-			'parent' =>3,
+			'parent' =>'3',
 			'owner' =>'admin'
 			),
 		array(
 			'name' =>'School\'s Classes',
 			'href' =>'admin/schoolclasses',
 			'class' =>null,
-			'parent' =>3,
+			'parent' =>'3',
 			'owner' =>'admin'
 			),
 		array(
 			'name' =>'New Analyze',
 			'href' =>'teacher/newanalyze',
 			'class' =>null,
-			'parent' =>5,
+			'parent' =>'5',
 			'owner' =>'teacher'
 			),
 		array(
 			'name' =>'List of Analyze',
 			'href' =>'teacher/analyzes',
 			'class' =>null,
-			'parent' =>5,
+			'parent' =>'5',
 			'owner' =>'teacher'
 			)
 	);

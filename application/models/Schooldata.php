@@ -61,7 +61,10 @@ class Schooldata extends CI_Model
 				case 'delete':
 					$this->db->where('class_id',$data)->delete($this->db->dbprefix.'classes');
 					break;
-				case 'getclass':
+				case 'get_all':
+					return $this->db->get($this->db->dbprefix.'classes')->result();
+					break;
+				case 'getaclass':
 					return $this->db->where('class_id',$data)->get($this->db->dbprefix.'classes')->row();
 					break;
 				case 'getunlisted':

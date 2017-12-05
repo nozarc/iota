@@ -8,7 +8,7 @@ class Teacher extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('url','form'));
+		$this->load->helper(array('url','form','db_batch'));
 		$this->load->model(array('users','schooldata','analyze'));
 		$this->load->library(array('form_validation','access','template','pagination','table','image_lib'));
 		if ($this->access->level()!='teacher') 
@@ -22,7 +22,7 @@ class Teacher extends CI_Controller
 		$data=$_SESSION;
 		$this->template->display('index',$data);
 	}
-	public function newanalyze($step='step_one')
+	public function newanalyze($step='step_one',$phase='chooseclass')
 	{
 		extract($_SESSION);
 		$data=$_SESSION;
@@ -40,8 +40,16 @@ class Teacher extends CI_Controller
 				if ($this->form_validation->run()) {
 					$st1=$this->input->post(null,true);
 					$st1['teacher_id']=$_SESSION['sess_uid'];
-					$this->analyze->new($st1);
-					$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;//tambah tgl ujian, biar lebih valid
+					if ($st1!=$st1_data) {
+						if (empty($st1_id)) {
+							$this->analyze->new($st1);
+						}
+						else{
+							$this->analyze->updateNew($st1,$st1_id);
+						}
+					}
+					$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;
+					$_SESSION['st1_data']=$this->input->post(null,true);
 					redirect($sess_level.'/newanalyze/step_two');
 				}
 				$this->template->display('newanalyze_st1',$data);
@@ -55,21 +63,67 @@ class Teacher extends CI_Controller
 				$measured_capabilities=$this->input->post('measured_capability',true);
 				if (!empty($answerskey)) {
 					foreach ($answerskey as $k => $value) {
-						$this->form_validation->set_rules('answer_key['.$k.']','Answer Key No '.$k,'alpha|required|max_length[1]');
+						$this->form_validation->set_rules('answer_key['.$k.']','Answer Key No '.$k,'required|max_length[1]');
 					}
 				}
+			
 				if ($this->form_validation->run()) {
-					$ins=$this->analyze->ins_questions($this->input->post(null,true),$st1_id);
+
+					if(empty($st2_data)){
+						$this->analyze->ins_question(batch_build($this->input->post(null,true),$st1_id),'batch');
+						$_SESSION['st2_data']=$this->input->post(null,true);
+					}
+					else{
+						$dbQuests=$this->analyze->get_quests($st1_id)->result_array();
+						$quests=$dbQuests;
+						foreach ($quests as $k1 => $v1) {
+							unset($quests[$k1]['id']);
+						}
+						$inputQuests=batch_build($this->input->post(null,true),$st1_id);
+						$dqcount=count($dbQuests);
+						$iqcount=count($inputQuests);
+						if($quests!=$inputQuests){
+							foreach ($dbQuests as $dqkey => $dqval) {
+								foreach ($inputQuests as $iqkey => $iqval) {
+									if ($dqval['q_number']==$iqval['q_number']) {
+										$this->analyze->upd_question($iqval,$dqval['id']);
+									}
+								}
+							}
+							if ($iqcount>$dqcount) {
+								for ($a=$dqcount; $a < $iqcount; $a++) { 
+									$this->analyze->ins_question($inputQuests[$a]);
+								}
+							}
+							elseif ($iqcount<$dqcount) {
+								for ($b=$iqcount; $b < $dqcount; $b++) { 
+									$data['lol'][0].=" |delete>".$dbQuests[$a]['id'].'_'.$dbQuests[$a]['id'].'=>'.$dbQuests[$a]['id'].' from '.count($inputQuests);
+								}
+							}
+						$_SESSION['st2_data']=$this->input->post(null,true);
+						}
+					}
 					redirect($sess_level.'/newanalyze/step_three');
 				}
-				$this->template->display('newanalyze_st2',$data);//perbaiki step_one, jadi ketika nekan back, data st1 ga hilang
+				$this->template->display('newanalyze_st2',$data);
+				/*solusi biar ga mumet, mikirnya sambil kayang*/
 				break;
 			case 'step_three':
-				$this->template->display('newanalyze_st3',$data);
-				break;
-
-			default:
-				# code...
+				switch ($phase) {
+					case 'chooseclass': //buat validasi form pilih kelas, jika run maka terset sesi kelas
+					//	$data['choosen_class']=$this->input->post('class',true);
+						$this->form_validation->set_rules('class','Class','numeric');
+						if ($this->form_validation->run()) {
+							$_SESSION['st3_data']['choosen_class']=$this->input->post('class',true);
+						}
+					@	$data['students']=$this->schooldata->classes('getmember','student',$_SESSION['st3_data']['choosen_class']);
+						$data['classes']=$this->schooldata->classes('get_all');
+					@	$data['lol']['st3_data']=$_SESSION['st3_data'];
+					//	$data['lol']['choosen_class']=$data['choosen_class'];
+						$data['lol']['post']=$this->input->post(null,true);
+						$this->template->display('newanalyze_st3',$data); //jangan lupa unset session st1-st3 baik id dan data
+						break;
+				}
 				break;
 		}
 	}
