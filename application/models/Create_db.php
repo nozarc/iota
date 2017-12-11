@@ -95,27 +95,27 @@ class Create_db extends CI_Model
 			report_location varchar(50)
 			)');
 
-		$this->db->query('create table if not exists '.$prefix.'test_questions(
+		$this->db->query('create table if not exists '.$prefix.'quiz(
 			id int(5) primary key auto_increment,
 			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade on delete set null,
-			q_number int(3),
+			quiz_number int(3),
 			question text,
 			answer_key varchar(2),
 			measured_capability text
 			)');
 
-		$this->db->query('create table if not exists '.$prefix.'question_answers(
+		$this->db->query('create table if not exists '.$prefix.'quiz_answer(
 			id int(5) primary key auto_increment,
-			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
-			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
-			quest_number int(3),
+			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade on delete set null,
+			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade on delete cascade,
+			quiz_number int(3),
 			answer varchar(1)
 			)');
 
 		$this->db->query('create table if not exists '.$prefix.'test_scores(
 			id int(5) primary key auto_increment,
-			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade,
-			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade,
+			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade on delete set null,
+			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade on delete cascade,
 			scores int(3)
 			)');
 //		end of analyze tables

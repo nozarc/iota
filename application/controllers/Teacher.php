@@ -22,7 +22,7 @@ class Teacher extends CI_Controller
 		$data=$_SESSION;
 		$this->template->display('index',$data);
 	}
-	public function newanalyze($step='step_one',$phase='chooseclass')
+	public function newanalyze($step='step_one')
 	{
 		extract($_SESSION);
 		$data=$_SESSION;
@@ -68,13 +68,12 @@ class Teacher extends CI_Controller
 				}
 			
 				if ($this->form_validation->run()) {
-
 					if(empty($st2_data)){
-						$this->analyze->ins_question(batch_build($this->input->post(null,true),$st1_id),'batch');
+						$this->analyze->ins_quiz(batch_build($this->input->post(null,true),$st1_id),'batch');
 						$_SESSION['st2_data']=$this->input->post(null,true);
 					}
 					else{
-						$dbQuests=$this->analyze->get_quests($st1_id)->result_array();
+						$dbQuests=$this->analyze->get_quiz($st1_id)->result_array();
 						$quests=$dbQuests;
 						foreach ($quests as $k1 => $v1) {
 							unset($quests[$k1]['id']);
@@ -85,21 +84,22 @@ class Teacher extends CI_Controller
 						if($quests!=$inputQuests){
 							foreach ($dbQuests as $dqkey => $dqval) {
 								foreach ($inputQuests as $iqkey => $iqval) {
-									if ($dqval['q_number']==$iqval['q_number']) {
-										$this->analyze->upd_question($iqval,$dqval['id']);
+									if ($dqval['quiz_number']==$iqval['quiz_number']) {
+										$this->analyze->upd_quiz($iqval,$dqval['id']);
 									}
 								}
 							}
 							if ($iqcount>$dqcount) {
 								for ($a=$dqcount; $a < $iqcount; $a++) { 
-									$this->analyze->ins_question($inputQuests[$a]);
+									$this->analyze->ins_quiz($inputQuests[$a]);
 								}
 							}
-							elseif ($iqcount<$dqcount) {
+						/*	elseif ($iqcount<$dqcount) {
 								for ($b=$iqcount; $b < $dqcount; $b++) { 
 									$data['lol'][0].=" |delete>".$dbQuests[$a]['id'].'_'.$dbQuests[$a]['id'].'=>'.$dbQuests[$a]['id'].' from '.count($inputQuests);
 								}
 							}
+						*/	
 						$_SESSION['st2_data']=$this->input->post(null,true);
 						}
 					}
@@ -109,21 +109,52 @@ class Teacher extends CI_Controller
 				/*solusi biar ga mumet, mikirnya sambil kayang*/
 				break;
 			case 'step_three':
-				switch ($phase) {
-					case 'chooseclass': //buat validasi form pilih kelas, jika run maka terset sesi kelas
-					//	$data['choosen_class']=$this->input->post('class',true);
-						$this->form_validation->set_rules('class','Class','numeric');
-						if ($this->form_validation->run()) {
-							$_SESSION['st3_data']['choosen_class']=$this->input->post('class',true);
-						}
-					@	$data['students']=$this->schooldata->classes('getmember','student',$_SESSION['st3_data']['choosen_class']);
-						$data['classes']=$this->schooldata->classes('get_all');
-					@	$data['lol']['st3_data']=$_SESSION['st3_data'];
-					//	$data['lol']['choosen_class']=$data['choosen_class'];
-						$data['lol']['post']=$this->input->post(null,true);
-						$this->template->display('newanalyze_st3',$data); //jangan lupa unset session st1-st3 baik id dan data
-						break;
+				if (empty($st1_id)) {
+					redirect($sess_level.'/newanalyze');
 				}
+				if (!empty($this->input->post('class',true))) {
+					$this->form_validation->set_rules('class','Class','numeric');
+					if ($this->form_validation->run()) {
+						$_SESSION['st3_data']['choosen_class']=$this->input->post('class',true);
+					}
+				}
+				if (!empty($this->input->post('answer',true))) {
+					foreach ($this->input->post('answer',true) as $ky => $vl) {
+						$this->form_validation->set_rules('answer['.$ky.']','Answer','alpha');
+					}
+					if ($this->form_validation->run()) {
+						//buat get_answer, bandingkan dengan input, jika beda maka update
+						if (empty($st3_data['answer'])) {
+							$this->analyze->ins_answer(batch_build($this->input->post(null,true)['answer'],$st1_id,'answer'),'batch');
+						}
+						else{
+							$inAns=batch_build($this->input->post(null,true)['answer'],$st1_id,'answer');
+							$dbAns=$this->analyze->get_answer($st1_id,'all');
+							$dbAnswer=$dbAns;
+							foreach ($dbAns as $k1 => $v1) {
+								unset($dbAns[$k1]['id']);
+							}
+							
+							if ($inAns!=$dbAns) {
+								foreach ($inAns as $key => $val) {
+									$data['lol']['compare'][$key]=array_diff_assoc($dbAns[$key], $inAns[$key]);
+								}
+							
+							}
+							
+						}
+						//buat fungsi query user ke db utk st3 data
+						$_SESSION['st3_data']['answer']=$this->analyze->get_answer($st1_id,'allpeople');
+						
+					}
+				}
+
+			@	$data['students']=$this->schooldata->classes('getmember','student',$_SESSION['st3_data']['choosen_class']);
+				$data['classes']=$this->schooldata->classes('get_all');
+			@	$data['lol']['batch']=batch_unbuild($this->analyze->get_answer($st1_id,'allpeople'),$this->analyze->get_answer($st1_id,'onlypeople'));
+			@	$data['st3_data']=$_SESSION['st3_data'];
+				
+				$this->template->display('newanalyze_st3',$data); //jangan lupa unset session st1-st3 baik id dan data
 				break;
 		}
 	}
