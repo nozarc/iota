@@ -21,7 +21,6 @@
       <pre>
         <?php
         print_r(!empty($lol)?$lol:null);
-        
         ?>
       </pre>
 <?php echo empty($lol)?"-->":null;?> 
@@ -43,6 +42,7 @@
                         <tr>
                           <th>No.</th>
                           <th>Subject</th>
+                          <th>Score Scale</th>
                           <th>Test Type</th>
                           <th>Test Date</th>
                           <th>Action</th>
@@ -61,6 +61,7 @@
                           <tr>
                             <td><?php echo $k; ;?></td>
                             <td><?php echo $val->subject ;?></td>
+                            <td><?php echo $val->score_scale ;?></td>
                             <td><?php echo $val->test_type ;?></td>
                             <td><?php echo $test_date ;?></td>
                             <td><div class='btn-group' ><?php 

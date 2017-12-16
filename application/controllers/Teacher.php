@@ -8,7 +8,7 @@ class Teacher extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('url','form','db_batch'));
+		$this->load->helper(array('url','form','db_batch','score'));
 		$this->load->model(array('users','schooldata','analyze'));
 		$this->load->library(array('form_validation','access','template','pagination','table','image_lib'));
 		if ($this->access->level()!='teacher') 
@@ -19,7 +19,9 @@ class Teacher extends CI_Controller
 	} 
 	public function index()
 	{
+		extract($_SESSION);
 		$data=$_SESSION;
+		$this->analyze->delete(array('teacher_id'=>$sess_uid,'done'=>'N'),'hard'); //to clear junk data
 		$this->template->display('index',$data);
 	}
 	public function analyze($page='list',$data_x='step_one',$data_y=null)
@@ -29,11 +31,9 @@ class Teacher extends CI_Controller
 		$this->analyze->delete(array('teacher_id'=>$sess_uid,'done'=>'N'),'hard'); //to clear junk data
 		switch ($page) {
 			case 'list':
-				
 				$data['table']=$this->analyze->show_all($sess_uid);
 				$this->template->display('analyzeslist',$data);
 				break;
-
 			case 'new':
 				switch ($data_x) {
 					case 'step_one':
@@ -41,7 +41,7 @@ class Teacher extends CI_Controller
 						$this->form_validation->set_rules('subject','Subject','required');
 						$this->form_validation->set_rules('test_type','Test Type','required');
 						$this->form_validation->set_rules('score_scale','Score Scale','required|numeric');
-						$this->form_validation->set_rules('min_score','Minimum Score','required|numeric');
+						$this->form_validation->set_rules('min_score','Minimum Score','required|decimal'); 
 						$this->form_validation->set_rules('test_date','Test Date','alpha_dash');
 						$this->form_validation->set_rules('test_correction_date','Correction Date','alpha_dash');
 						$this->form_validation->set_rules('test_report_date','Test Report Date','alpha_dash');
@@ -52,12 +52,13 @@ class Teacher extends CI_Controller
 							if ($st1!=$st1_data) {
 								if (empty($st1_id)) {
 									$this->analyze->new($st1);
+									$this->analyze->newanalyze($st1);
 								}
 								else{
 									$this->analyze->updateNew($st1,$st1_id);
 								}
 							}
-							$_SESSION['st1_id']=$this->analyze->get($st1)->row()->id;
+							$_SESSION['st1_id']=$this->analyze->get($st1)->id;
 							$_SESSION['st1_data']=$this->input->post(null,true);
 							redirect($sess_level.'/analyze/new/step_two');
 						}
@@ -65,7 +66,7 @@ class Teacher extends CI_Controller
 						break;
 					case 'step_two':
 						if (empty($st1_id)) {
-							redirect($sess_level.'analyze/new/');
+							redirect($sess_level.'/analyze/new/');
 						}
 						$answerskey=$this->input->post('answer_key',true);
 						$questions=$this->input->post('question',true);
@@ -115,7 +116,6 @@ class Teacher extends CI_Controller
 							redirect($sess_level.'/analyze/new/step_three');
 						}
 						$this->template->display('newanalyze_st2',$data);
-						/*solusi biar ga mumet, mikirnya sambil kayang*/
 						break;
 					case 'step_three':
 						if (empty($st1_id)) {
@@ -125,7 +125,6 @@ class Teacher extends CI_Controller
 							$this->form_validation->set_rules('class','Class','numeric');
 							if ($this->form_validation->run()) {
 								$_SESSION['st3_data']['choosen_class']=$this->input->post('class',true);
-
 							}
 						}
 						if (!empty($this->input->post('answer',true))) {
@@ -133,7 +132,6 @@ class Teacher extends CI_Controller
 								$this->form_validation->set_rules('answer['.$ky.']','Answer','alpha');
 							}
 							if ($this->form_validation->run()) {
-								//buat get_answer, bandingkan dengan input, jika beda maka update
 								if (empty($st3_data['answer'])) {
 									$this->analyze->ins_answer(batch_build($this->input->post(null,true)['answer'],$st1_id,'answer'),'batch');
 								}
@@ -147,16 +145,18 @@ class Teacher extends CI_Controller
 									
 									if ($inAns!=$dbAns) {
 										$this->analyze->upd_answer($inAns);
-									}
-									
+									}	
 								}
-								$_SESSION['st3_data']['answer']=batch_unbuild($this->analyze->get_answer($st1_id,'allpeople'),$this->analyze->get_answer($st1_id,'onlypeople'));
-								$this->analyze->new($st1_id,'done');
+								$_SESSION['st3_data']['answer']=$this->analyze->get_answer($st1_id,'allpeople');
+								$this->analyze->ins_score(score($this->analyze->get_answer($st1_id,'allpeople'),$st2_data,$this->analyze->show($st1_id,$sess_uid,'notdone')),'batch');
+								$this->analyze->newanalyze($st1_id,'done');
+								$id_analyze=$st1_id;
 								unset($_SESSION['st1_id']);
 								unset($_SESSION['st1_data']);
 								unset($_SESSION['st2_data']);
 								unset($_SESSION['st3_data']);
 								redirect($sess_level.'/analyze/list/');
+								redirect($sess_level.'/analyze/result/'.$id_analyze);
 							}
 						}
 					@	$data['students']=$this->schooldata->classes('getmember','student',$_SESSION['st3_data']['choosen_class']);
@@ -169,9 +169,22 @@ class Teacher extends CI_Controller
 			
 			case 'result':
 				if (!empty($data_x)) {
-					$data['lol']['un']=$this->analyze->get_quiz($data_x);
-					$data['lol']['batch']=batch_unbuild($this->analyze->get_quiz($data_x),null,'quiz');
+					if (empty($this->analyze->get_score($data_x))) {
+						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
+					}
+					$data['analyze']=$this->analyze->show($data_x,$sess_uid);
+					$data['quiz']=batch_unbuild($this->analyze->get_quiz($data_x),null,'quiz');
+					$data['student']=$this->analyze->get_answer($data_x,'allpeople');
+					$data['score']=batch_unbuild($this->analyze->get_score($data_x),null,'score');
+				//	$data['lol']['score']=$data['score'];
 					$this->template->display('analyzeresult',$data);
+				}
+				break;
+			case 'delete':
+				if(!empty($data_x)){
+					$id=array('id'=>$data_x);
+					$this->analyze->delete($id,'soft');
+					redirect($sess_level.'/analyze/list/');
 				}
 				break;
 		}

@@ -9,18 +9,51 @@ class Analyze extends CI_Model
 		{
 			parent::__construct();
 			$this->load->database('default');
-			$this->load->helper('db_batch');
+			$this->load->helper('db_batch','score');
 		}
 	public function show_all($value=null)
 	{
 		$where=array('teacher_id' => $value, 'done' => 'Y', 'deleted'=>'N');
-		return $this->db->get_where($this->db->dbprefix.'analyze',$where)->result();
+		return $this->db
+				->select('*,'.$this->db->dbprefix.'analyze.id AS id,'.$this->db->dbprefix.'score_scale.score_scale AS score_scale')
+				->join($this->db->dbprefix.'score_scale',$this->db->dbprefix.'score_scale.id='.$this->db->dbprefix.'analyze.score_scale')
+				->order_by($this->db->dbprefix.'analyze.id','ASC')
+				->where($where)
+				->get($this->db->dbprefix.'analyze')
+				->result();
+	}
+	public function show($id=null,$value=null,$target='done')
+	{
+		switch ($target) {
+			case 'notdone':
+				$where=array($this->db->dbprefix.'analyze.id'=>$id,'teacher_id' => $value, 'done' => 'N', 'deleted'=>'N');
+				return $this->db
+						->select('*,'.$this->db->dbprefix.'analyze.id AS id,'.$this->db->dbprefix.'score_scale.score_scale AS score_scale')
+						->join($this->db->dbprefix.'score_scale',$this->db->dbprefix.'score_scale.id='.$this->db->dbprefix.'analyze.score_scale')
+						->where($where)
+						->get($this->db->dbprefix.'analyze')
+						->row();
+				break;
+			case 'done':
+				$where=array($this->db->dbprefix.'analyze.id'=>$id,'teacher_id' => $value, 'done' => 'Y', 'deleted'=>'N');
+				return $this->db
+						->select('*,'.$this->db->dbprefix.'analyze.id AS id,'.$this->db->dbprefix.'score_scale.score_scale AS score_scale')
+						->join($this->db->dbprefix.'score_scale',$this->db->dbprefix.'score_scale.id='.$this->db->dbprefix.'analyze.score_scale')
+						->where($where)
+						->get($this->db->dbprefix.'analyze')
+						->row();
+				break;		
+			default:
+				return false;
+				break;
+		}
 	}
 	public function get_score_scale($val=null)
 		{
 			return $this->db->get($this->db->dbprefix.'score_scale');
 		}
-	public function new($data=null,$done=null)
+
+	public function newanalyze($data=null,$done=null)
 		{
 			if (empty($done)) {
 				$this->db->insert($this->db->dbprefix.'analyze',$data);
@@ -37,7 +70,7 @@ class Analyze extends CI_Model
 		}
 	public function get($where=null)
 		{
-			return $this->db->get_where($this->db->dbprefix.'analyze',$where);
+			return $this->db->get_where($this->db->dbprefix.'analyze',$where)->row();
 		}
 	public function get_quiz($id=null)
 	{
@@ -67,26 +100,28 @@ class Analyze extends CI_Model
 	public function get_answer($value=null,$get='all',$id=null)
 	{
 		$where=array('id_analyze'=>$value);
+		$allpeople=$this->db
+					->select('*,'.$this->db->dbprefix.'quiz_answer.id AS id')
+					->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'quiz_answer.user_id')
+					->where($where)
+					->get($this->db->dbprefix.'quiz_answer')
+					->result_array();
+		$onlypeople=$this->db
+					->select('*,'.$this->db->dbprefix.'quiz_answer.id AS id')
+					->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'quiz_answer.user_id')
+					->group_by('user_id')
+					->where($where)
+					->get($this->db->dbprefix.'quiz_answer')
+					->result_array();
 		switch ($get) {
 			case 'all':
 				return $this->db->get_where($this->db->dbprefix.'quiz_answer',$where)->result_array();
 				break;
 			case 'allpeople':
-				return $this->db
-							->select('*,'.$this->db->dbprefix.'quiz_answer.id AS id')
-							->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'quiz_answer.user_id')
-							->where($where)
-							->get($this->db->dbprefix.'quiz_answer')
-							->result_array();
+				return batch_unbuild($allpeople,$onlypeople,'answer');
 				break;
 			case 'onlypeople':
-				return $this->db
-							->select('*,'.$this->db->dbprefix.'quiz_answer.id AS id')
-							->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'quiz_answer.user_id')
-							->group_by('user_id')
-							->where($where)
-							->get($this->db->dbprefix.'quiz_answer')
-							->result_array();
+				return $onlypeople;
 				break;
 		}
 	}
@@ -120,14 +155,14 @@ class Analyze extends CI_Model
 		}
 		return true;
 	}
-	public function delete($value=null,$method='soft')
+	public function get_score($id=null,$for='all')
 	{
-		switch ($method) {
-			case 'hard':
-				$this->db->where($value)->delete($this->db->dbprefix.'analyze');
+		switch ($for) {
+			case 'all':
+				return $this->db->get_where($this->db->dbprefix.'test_scores',array('id_analyze'=>$id))->result();
 				break;
-			case 'soft':
-				$this->db->where($value)->update($this->db->dbprefix.'analyze',array('deleted'=>'Y'));
+			case 'one':
+				return $this->db->get_where($this->db->dbprefix.'test_scores',array('user_id'=>$id))->row();
 				break;
 		}
 	}
@@ -135,7 +170,7 @@ class Analyze extends CI_Model
 	{
 		switch ($method) {
 			case 'batch':
-
+				$this->db->insert_batch($this->db->dbprefix.'test_scores',$value);
 				return true;
 				break;
 			case null:
@@ -144,6 +179,17 @@ class Analyze extends CI_Model
 				break;
 			default:
 				return false;
+				break;
+		}
+	}
+	public function delete($value=null,$method='soft')
+	{
+		switch ($method) {
+			case 'hard':
+				$this->db->where($value)->delete($this->db->dbprefix.'analyze');
+				break;
+			case 'soft':
+				$this->db->where($value)->update($this->db->dbprefix.'analyze',array('deleted'=>'Y'));
 				break;
 		}
 	}

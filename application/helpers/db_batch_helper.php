@@ -58,18 +58,23 @@ function batch_unbuild($data1=null,$data2=null,$for='answer')
 						$arrx['userphoto']=$val2['userphoto'];
 						foreach ($data1 as $k1 => $val1) {
 							if ($val1['user_id']==$val2['user_id']) {
-								$arry['quiz_number'][$val1['id']]=$val1['quiz_number'];
-								$arry['answer'][$val1['id']]=$val1['answer'];
+								$arry['answer'][$val1['quiz_number']]=$val1['answer'];
 							}
 						}
-						$arrx['quiz_number']=$arry['quiz_number'];
 						$arrx['answer']=$arry['answer'];
 						unset($arry);
 						array_push($arr, $arrx);
 					}
 					return $arr;
 					break;
-				
+				case 'score':
+					foreach ($data1 as $key => $value) {
+						foreach ($value as $k => $v) {
+							$arrx[$value->user_id][$k]=$v;
+						}
+					}
+					return $arrx;
+					break;
 				case 'quiz':
 					foreach ($data1 as $key => $val) {
 						$arr['answer_key'][$val['quiz_number']]=$val['answer_key'];

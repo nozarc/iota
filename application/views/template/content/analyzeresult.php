@@ -3,7 +3,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Analyze Result <small></small></h3>
+                <h3><small></small></h3>
               </div>
 
               <div class="title_right">
@@ -21,15 +21,14 @@
       <pre>
         <?php
         print_r(!empty($lol)?$lol:null);
-        
         ?>
       </pre>
-<?php echo empty($lol)?"-->":null;?>             
+<?php echo empty($lol)?"-->":null;?>         
             <div class="clearfix"></div>
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><i class="fa fa-align-left"></i> Collapsible / Accordion <small>Sessions</small></h2>
+                    <h2><i class="fa fa-align-left"></i> Analyze Result <small></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -63,38 +62,46 @@
                                 <tr>
                                   <th rowspan="2">No.</th>
                                   <th rowspan="2">Student</th>
-                                  <th colspan="5">No. Quiz</th>
+                                  <th colspan="<?php echo count($quiz['answer_key']); ?>">No. Quiz</th>
+                                  <th rowspan="2">Total Right/Wrong Answer</th>
                                   <th rowspan="2">Score</th>
                                 </tr>
                                 <tr>
-                                  <th>1</th>
-                                  <th>2</th>
-                                  <th>3</th>
-                                  <th>4</th>
-                                  <th>5</th>
+                                <?php
+                                  for ($i=1; $i <= count($quiz['answer_key']); $i++) { 
+                                ?>
+                                  <th><?php echo $i; ?></th>
+                                <?php 
+                                  }
+                                ?>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr>
-                                  <th scope="row">1</th>
-                                  <td >Mark</td>
-                                  <td class="answer alert-warning">a</td>
-                                  <td class="answer">b</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">70</td>
-                                </tr>
-                                <tr>
-                                  <th scope="row">1</th>
-                                  <td>john</td>
-                                  <td class="answer">a</td>
-                                  <td class="answer">b</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">c</td>
-                                  <td class="answer">70</td>
-                                </tr>
+                              <?php 
+                                foreach ($student as $key => $value) {
+                                  $num=$key+1;
+                                  $show_score=$score[$student[$key]['uid']]['score'];
+                                ?>
+                                  <tr>
+                                    <th scope="row"><?php echo $num; ?></th>
+                                    <td ><?php echo $student[$key]['name']; ?></td>
+                                  <?php
+                                    foreach ($student[$key]['answer'] as $no => $ans) {
+                                      if ($ans!=$quiz['answer_key'][$no]) {
+                                        $alert='alert alert-danger';
+                                      }
+                                  ?>
+                                    <td class="answer <?php echo isset($alert)?$alert:null; ?>"><?php echo $ans; ?></td>
+                                  <?php
+                                    unset($alert);
+                                    }
+                                  ?>
+                                    <td class="answer"></td>
+                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":null;?>"><?php echo $show_score; ?></td>
+                                  </tr>
+                                <?php
+                                }
+                              ?>
                               </tbody>
                             </table>
                           </div>

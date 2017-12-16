@@ -80,7 +80,7 @@ class Create_db extends CI_Model
 //		analyze tables
 		$this->db->query('create table if not exists '.$prefix.'score_scale(
 			id int(5) primary key auto_increment,
-			scores int (5)
+			score_scale int (5)
 			)');
 		$this->db->query('create table if not exists '.$prefix.'analyze(
 			id int(5) primary key auto_increment,
@@ -88,13 +88,13 @@ class Create_db extends CI_Model
 			subject varchar(50),
 			test_type varchar(50),
 			score_scale int(5), foreign key(score_scale) references '.$prefix.'score_scale(id) on delete set null on update cascade,
-			min_score int(5),
+			min_score decimal(6,2),
 			test_date date,
 			test_correction_date date,
 			test_report_date date,
 			report_location varchar(50),
 			done enum("Y","N") default "N",
-			deleted enum("Y","N") default "N",
+			deleted enum("Y","N") default "N"
 			)');
 
 		$this->db->query('create table if not exists '.$prefix.'quiz(
@@ -118,7 +118,7 @@ class Create_db extends CI_Model
 			id int(5) primary key auto_increment,
 			id_analyze int(5), foreign key(id_analyze) references '.$prefix.'analyze(id) on update cascade on delete set null,
 			user_id int(5), foreign key(user_id) references '.$prefix.'user(uid) on update cascade on delete cascade,
-			scores int(3)
+			score decimal(6,2)
 			)');
 //		end of analyze tables
 
