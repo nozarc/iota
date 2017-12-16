@@ -11,14 +11,23 @@ class Analyze extends CI_Model
 			$this->load->database('default');
 			$this->load->helper('db_batch');
 		}
-
+	public function show_all($value=null)
+	{
+		$where=array('teacher_id' => $value, 'done' => 'Y', 'deleted'=>'N');
+		return $this->db->get_where($this->db->dbprefix.'analyze',$where)->result();
+	}
 	public function get_score_scale($val=null)
 		{
 			return $this->db->get($this->db->dbprefix.'score_scale');
 		}
-	public function new($data=null)
+	public function new($data=null,$done=null)
 		{
-			$this->db->insert($this->db->dbprefix.'analyze',$data);
+			if (empty($done)) {
+				$this->db->insert($this->db->dbprefix.'analyze',$data);
+			}
+			elseif ($done='done') {
+				$this->db->where('id',$data)->update($this->db->dbprefix.'analyze',array('done'=>'Y'));
+			}
 			return true;
 		}
 	public function updateNew($data=null,$id=null)
@@ -33,7 +42,7 @@ class Analyze extends CI_Model
 	public function get_quiz($id=null)
 	{
 		$where=array('id_analyze'=>$id);
-		return $this->db->get_where($this->db->dbprefix.'quiz',$where);
+		return $this->db->get_where($this->db->dbprefix.'quiz',$where)->result_array();
 	}
 	public function ins_quiz($value=null,$method=null)
 	{
@@ -89,10 +98,52 @@ class Analyze extends CI_Model
 				foreach ($value as $k => $val) {
 					$this->db->insert_batch($this->db->dbprefix.'quiz_answer',$val);
 				}
+				return true;
 				break;
 
 			case null:
 				$this->db->insert($this->db->dbprefix.'quiz_answer',$value);
+				return true;
+				break;
+		}
+	}
+	public function upd_answer($value=null)
+	{
+		foreach ($value as $key => $val) {
+			$upd=array('answer'=>$val['answer']);
+			$where=array(
+							'id_analyze' => $val['id_analyze'],
+							'user_id' => $val['user_id'],
+							'quiz_number' => $val['quiz_number']
+						);
+			$this->db->where($where)->update($this->db->dbprefix.'quiz_answer',$upd);
+		}
+		return true;
+	}
+	public function delete($value=null,$method='soft')
+	{
+		switch ($method) {
+			case 'hard':
+				$this->db->where($value)->delete($this->db->dbprefix.'analyze');
+				break;
+			case 'soft':
+				$this->db->where($value)->update($this->db->dbprefix.'analyze',array('deleted'=>'Y'));
+				break;
+		}
+	}
+	public function ins_score($value=null,$method=null)
+	{
+		switch ($method) {
+			case 'batch':
+
+				return true;
+				break;
+			case null:
+				$this->db->insert($this->db->dbprefix.'test_scores',$value);
+				return true;
+				break;
+			default:
+				return false;
 				break;
 		}
 	}

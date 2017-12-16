@@ -92,7 +92,9 @@ class Create_db extends CI_Model
 			test_date date,
 			test_correction_date date,
 			test_report_date date,
-			report_location varchar(50)
+			report_location varchar(50),
+			done enum("Y","N") default "N",
+			deleted enum("Y","N") default "N",
 			)');
 
 		$this->db->query('create table if not exists '.$prefix.'quiz(

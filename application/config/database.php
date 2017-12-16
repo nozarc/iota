@@ -182,14 +182,14 @@ $config['sidebar']=array(
 			),
 		array(
 			'name' =>'New Analyze',
-			'href' =>'teacher/newanalyze',
+			'href' =>'teacher/analyze/new',
 			'class' =>null,
 			'parent' =>'5',
 			'owner' =>'teacher'
 			),
 		array(
 			'name' =>'List of Analyze',
-			'href' =>'teacher/analyzes',
+			'href' =>'teacher/analyze/list',
 			'class' =>null,
 			'parent' =>'5',
 			'owner' =>'teacher'

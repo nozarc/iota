@@ -45,15 +45,15 @@ function batch_build($val=null,$id=null,$for='quiz')
 		}
 	}
 
-function batch_unbuild($data1=null,$data2=null,$method='answer')
+function batch_unbuild($data1=null,$data2=null,$for='answer')
 	{
 		if ($data1!=null) {
-			switch ($method) {
+			switch ($for) {
 				case 'answer':
 					$arr=array();
 					foreach ($data2 as $k2 => $val2) {
 						$arrx['id_analyze']=$val2['id_analyze'];
-						$arrx['user_id']=$val2['user_id'];
+						$arrx['uid']=$val2['user_id'];
 						$arrx['name']=$val2['name'];
 						$arrx['userphoto']=$val2['userphoto'];
 						foreach ($data1 as $k1 => $val1) {
@@ -70,8 +70,13 @@ function batch_unbuild($data1=null,$data2=null,$method='answer')
 					return $arr;
 					break;
 				
-				default:
-					# code...
+				case 'quiz':
+					foreach ($data1 as $key => $val) {
+						$arr['answer_key'][$val['quiz_number']]=$val['answer_key'];
+						$arr['question'][$val['quiz_number']]=$val['question'];
+						$arr['measured_capability'][$val['quiz_number']]=$val['measured_capability'];
+					}
+					return $arr;
 					break;
 			}
 		}

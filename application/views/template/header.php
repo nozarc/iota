@@ -46,6 +46,11 @@
     
     <!-- starrr -->
     <link href="<?php echo $_tpath;?>/vendors/starrr/dist/starrr.css" rel="stylesheet">
+    
+    <!-- PNotify -->
+    <link href="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="<?php echo $_tpath;?>/build/css/custom.min.css" rel="stylesheet">
