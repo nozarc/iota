@@ -36,7 +36,7 @@ class Teacher extends CI_Controller
 				break;
 			case 'new':
 				switch ($data_x) {
-					case 'step_one':
+					case 'step_one'://tambah nilai jika benar, salah, dan tidak dijawab
 						$data['score_scale']=$this->analyze->get_score_scale()->result();
 						$this->form_validation->set_rules('subject','Subject','required');
 						$this->form_validation->set_rules('test_type','Test Type','required');
@@ -169,14 +169,14 @@ class Teacher extends CI_Controller
 			
 			case 'result':
 				if (!empty($data_x)) {
-					if (empty($this->analyze->get_score($data_x))) {
-						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
-					}
 					$data['analyze']=$this->analyze->show($data_x,$sess_uid);
 					$data['quiz']=batch_unbuild($this->analyze->get_quiz($data_x),null,'quiz');
 					$data['student']=$this->analyze->get_answer($data_x,'allpeople');
-					$data['score']=batch_unbuild($this->analyze->get_score($data_x),null,'score');
-				//	$data['lol']['score']=$data['score'];
+					if (empty($this->analyze->get_score($data_x))) {
+						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
+					}
+					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
+					$data['lol']['score']=$data['score'];
 					$this->template->display('analyzeresult',$data);
 				}
 				break;

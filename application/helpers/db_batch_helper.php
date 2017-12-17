@@ -71,6 +71,11 @@ function batch_unbuild($data1=null,$data2=null,$for='answer')
 					foreach ($data1 as $key => $value) {
 						foreach ($value as $k => $v) {
 							$arrx[$value->user_id][$k]=$v;
+							foreach ($data2 as $k2 => $v2) {
+								if ($value->user_id==$v2['user_id']) {
+									$arrx[$value->user_id]['correct']=$v2['correct'];
+								}
+							}
 						}
 					}
 					return $arrx;

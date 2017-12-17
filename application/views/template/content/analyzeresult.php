@@ -63,8 +63,9 @@
                                   <th rowspan="2">No.</th>
                                   <th rowspan="2">Student</th>
                                   <th colspan="<?php echo count($quiz['answer_key']); ?>">No. Quiz</th>
-                                  <th rowspan="2">Total Right/Wrong Answer</th>
+                                  <th rowspan="2">Correct Answer</th>
                                   <th rowspan="2">Score</th>
+                                  <th rowspan="2">Alphabetical Score</th>
                                 </tr>
                                 <tr>
                                 <?php
@@ -81,6 +82,7 @@
                                 foreach ($student as $key => $value) {
                                   $num=$key+1;
                                   $show_score=$score[$student[$key]['uid']]['score'];
+                                  $show_correct=$score[$student[$key]['uid']]['correct'];
                                 ?>
                                   <tr>
                                     <th scope="row"><?php echo $num; ?></th>
@@ -96,8 +98,9 @@
                                     unset($alert);
                                     }
                                   ?>
-                                    <td class="answer"></td>
+                                    <td class="answer"><?php echo $show_correct; ?></td>
                                     <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":null;?>"><?php echo $show_score; ?></td>
+                                    <th rowspan="2">(alpha)</th>
                                   </tr>
                                 <?php
                                 }
@@ -109,7 +112,7 @@
                       </div>
                       <div class="panel">
                         <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                          <h4 class="panel-title">Collapsible Group Items #2</h4>
+                          <h4 class="panel-title">Question Analysis</h4>
                         </a>
                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                           <div class="panel-body">

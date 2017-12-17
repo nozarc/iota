@@ -2,7 +2,7 @@
 /**
 * 
 */
-function score($data_x=null,$data_y=null,$data_z=null)
+function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 {
 	foreach ($data_z as $key => $value) {
 		$data_temp[$key]=$value;
@@ -14,7 +14,17 @@ function score($data_x=null,$data_y=null,$data_z=null)
 		$wrong_answer=array_diff_assoc($val['answer'], $data_y['answer_key']);
 		$diffcount=count($wrong_answer);
 		$count=count($data_y['answer_key']);
-		$score[$key]['score']=($count-$diffcount)/$count*$data_z['score_scale'];
+		$correct=$count-$diffcount;
+		$score[$key]['score']=$correct/$count*$data_z['score_scale'];
+		switch ($method) {
+			case 'info':
+				$score[$key]['correct']=$correct;
+				break;
+			
+			default:
+				# code...
+				break;
+		}
 		/*
 		$score[$key]['wrong_answer']=$wrong_answer;
 		$score[$key]['diffcount']=$diffcount;
@@ -22,4 +32,14 @@ function score($data_x=null,$data_y=null,$data_z=null)
 		*/
 	}
 	return $score;
+	$x=$data_z['score_scale']/5;
+		for ($i=1; $i <= 5; $i++) { 
+			$y=$i*$x;
+			$xy=$y/2;
+			for ($j=1; $j <= 2; $j++) { 
+				$z=$j*$xy;
+			@	$a.=", $z";
+			}
+		}
+		//test this and combine with switch
 }
