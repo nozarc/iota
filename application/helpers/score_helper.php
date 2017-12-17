@@ -15,10 +15,57 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 		$diffcount=count($wrong_answer);
 		$count=count($data_y['answer_key']);
 		$correct=$count-$diffcount;
-		$score[$key]['score']=$correct/$count*$data_z['score_scale'];
+		$scorex=$correct/$count*$data_z['score_scale'];
+		$score[$key]['score']=$scorex;
+		$x=$data_z['score_scale']/5;
+		///alpha score//-->need to improve this 
+		for ($i=1; $i <= 5; $i++) { 
+			$y=$i*$x;
+			$xy=$y/2;
+			for ($j=1; $j <= 2; $j++) { 
+				$z=$j*$xy;
+				$alph[$i][$j]=$z;
+			}
+		}
+		switch (true) {
+			case ($scorex<=$alph[1][1]):
+				$alpha='E-';
+				break;
+			case ($alph[1][1]<$scorex and $scorex<=$alph[1][2]):
+				$alpha='E';
+				break;
+			case ($alph[1][2]<$scorex and $scorex<=$alph[2][1]):
+				$alpha='D-';
+				break;
+			case ($alph[2][1]<$scorex and $scorex<=$alph[2][2]):
+				$alpha='D';
+				break;
+			case ($alph[2][2]<$scorex and $scorex<=$alph[3][1]):
+				$alpha='C-';
+				break;
+			case ($alph[3][1]<$scorex and $scorex<=$alph[3][2]):
+				$alpha='C';
+				break;
+			case ($alph[3][2]<$scorex and $scorex<=$alph[4][1]):
+				$alpha='B-';
+				break;
+			case ($alph[4][1]<$scorex and $scorex<=$alph[4][2]):
+				$alpha='B';
+				break;
+			case ($alph[4][2]<$scorex and $scorex<=$alph[5][1]):
+				$alpha='A-';
+				break;
+			case ($alph[5][1]< $scorex and $scorex<=$alph[5][2]):
+				$alpha='A';
+				break;
+		}
+		///End of Alpha Score///
+	//	$score[$key]['alphax']=$alpha;
+		unset($a);
 		switch ($method) {
 			case 'info':
 				$score[$key]['correct']=$correct;
+				$score[$key]['alpha']=$alpha;
 				break;
 			
 			default:
@@ -32,14 +79,4 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 		*/
 	}
 	return $score;
-	$x=$data_z['score_scale']/5;
-		for ($i=1; $i <= 5; $i++) { 
-			$y=$i*$x;
-			$xy=$y/2;
-			for ($j=1; $j <= 2; $j++) { 
-				$z=$j*$xy;
-			@	$a.=", $z";
-			}
-		}
-		//test this and combine with switch
 }

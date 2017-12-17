@@ -83,6 +83,7 @@
                                   $num=$key+1;
                                   $show_score=$score[$student[$key]['uid']]['score'];
                                   $show_correct=$score[$student[$key]['uid']]['correct'];
+                                  $show_alpha=$score[$student[$key]['uid']]['alpha'];
                                 ?>
                                   <tr>
                                     <th scope="row"><?php echo $num; ?></th>
@@ -100,7 +101,7 @@
                                   ?>
                                     <td class="answer"><?php echo $show_correct; ?></td>
                                     <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":null;?>"><?php echo $show_score; ?></td>
-                                    <th rowspan="2">(alpha)</th>
+                                    <td class="answer" ><?php echo $show_alpha; ?></td>
                                   </tr>
                                 <?php
                                 }

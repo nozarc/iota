@@ -176,7 +176,8 @@ class Teacher extends CI_Controller
 						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
 					}
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
-					$data['lol']['score']=$data['score'];
+					$data['lol']['student']=$data['student'];
+					$data['lol']['quiz']=$data['quiz'];
 					$this->template->display('analyzeresult',$data);
 				}
 				break;
