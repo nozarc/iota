@@ -32,7 +32,6 @@ class Teacher extends CI_Controller
 	{
 		extract($_SESSION);
 		$data=$_SESSION;
-		$this->analyze->delete(array('teacher_id'=>$sess_uid,'done'=>'N'),'hard'); //to clear junk data
 		switch ($page) {
 			case 'list':
 				$data['table']=$this->analyze->show_all($sess_uid);
@@ -56,12 +55,11 @@ class Teacher extends CI_Controller
 							$st1['teacher_id']=$_SESSION['sess_uid'];
 							if ($st1!=(!empty($st1_data)?$st1_data:null)) {
 								if (empty($st1_id)) {
-								 	$this->analyze->newanalyze($st1);
-								 	echo "ancuk";
+								 	$this->analyze->newanalyze($st1,null);
+								 	$data['lol']=$st1;
 								}
 								else{
 									$this->analyze->updateNew($st1,$st1_id);
-									echo "asu";
 								}
 							}
 							$_SESSION['st1_id']=$this->analyze->get($st1)->id;
