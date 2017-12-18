@@ -162,9 +162,9 @@ class Create_db extends CI_Model
 	{
 		$scores=array
 				(
-					array('scores' => 4),
-					array('scores' => 10),
-					array('scores' => 100)
+					array('score_scale' => 4),
+					array('score_scale' => 10),
+					array('score_scale' => 100)
 				);
 		if($this->db->get($prefix.'score_scale')->num_rows()==0)
 		{
@@ -173,7 +173,7 @@ class Create_db extends CI_Model
 	}
 	public function c_fordev($prefix=null)
 	{
-		$users=array(
+		$teacher=array(
 				array(
 					'username'	=>	'guru',
 					'password'	=>	md5('guru'),
@@ -188,28 +188,19 @@ class Create_db extends CI_Model
 					'name'		=>	'guru_2',
 					'class'		=>	'2'
 					),
-				array(
-					'username'	=>	'siswa',
-					'password'	=>	md5('siswa'),
-					'level'		=>	'student',
-					'name'		=>	'siswa_1',
-					'class'		=>	'1'
-					),
-				array(
-					'username'	=>	'siswa2',
-					'password'	=>	md5('siswa2'),
-					'level'		=>	'student',
-					'name'		=>	'siswa_2',
-					'class'		=>	'1'
-					),
-				array(
-					'username'	=>	'siswa3',
-					'password'	=>	md5('siswa3'),
-					'level'		=>	'student',
-					'name'		=>	'siswa_3',
-					'class'		=>	'1'
-					),
 				);
+		$student=array();
+		for ($i=1; $i <=10 ; $i++) { 
+			$stud=array(
+						'username'	=>	"siswa$i",
+						'password'	=>	md5("siswa$i"),
+						'level'		=>	'student',
+						'name'		=>	"siswa_$i",
+						'class'		=>	'1'
+						);
+			array_push($student, $stud);
+		}
+		$users=array_merge($teacher, $student);
 		$classes=array(
 					array(
 						'class_id'	=>'1',

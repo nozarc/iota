@@ -8,7 +8,7 @@ class Teacher extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('url','form','db_batch','score'));
+		$this->load->helper(array('url','form','db_batch','quiz_result'));
 		$this->load->model(array('users','schooldata','analyze'));
 		$this->load->library(array('form_validation','access','template','pagination','table','image_lib'));
 		if ($this->access->level()!='teacher') 
@@ -21,7 +21,11 @@ class Teacher extends CI_Controller
 	{
 		extract($_SESSION);
 		$data=$_SESSION;
-		$this->analyze->delete(array('teacher_id'=>$sess_uid,'done'=>'N'),'hard'); //to clear junk data
+		$this->analyze->delete(array('teacher_id'=>$sess_uid,'done'=>'N'),'hard'); //to clear junk data on database
+		unset($_SESSION['st1_id']);
+		unset($_SESSION['st1_data']);
+		unset($_SESSION['st2_data']);
+		unset($_SESSION['st3_data']);
 		$this->template->display('index',$data);
 	}
 	public function analyze($page='list',$data_x='step_one',$data_y=null)
@@ -34,6 +38,7 @@ class Teacher extends CI_Controller
 				$data['table']=$this->analyze->show_all($sess_uid);
 				$this->template->display('analyzeslist',$data);
 				break;
+
 			case 'new':
 				switch ($data_x) {
 					case 'step_one'://tambah nilai jika benar, salah, dan tidak dijawab
@@ -49,13 +54,14 @@ class Teacher extends CI_Controller
 						if ($this->form_validation->run()) {
 							$st1=$this->input->post(null,true);
 							$st1['teacher_id']=$_SESSION['sess_uid'];
-							if ($st1!=$st1_data) {
+							if ($st1!=(!empty($st1_data)?$st1_data:null)) {
 								if (empty($st1_id)) {
-									$this->analyze->new($st1);
-									$this->analyze->newanalyze($st1);
+								 	$this->analyze->newanalyze($st1);
+								 	echo "ancuk";
 								}
 								else{
 									$this->analyze->updateNew($st1,$st1_id);
+									echo "asu";
 								}
 							}
 							$_SESSION['st1_id']=$this->analyze->get($st1)->id;
@@ -175,9 +181,10 @@ class Teacher extends CI_Controller
 					if (empty($this->analyze->get_score($data_x))) {
 						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
 					}
+					$data['result']=analyze($data['quiz']['answer_key'],$data['student']);
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
 					$data['lol']['student']=$data['student'];
-					$data['lol']['quiz']=$data['quiz'];
+					$data['lol']['result']=$data['result'];
 					$this->template->display('analyzeresult',$data);
 				}
 				break;

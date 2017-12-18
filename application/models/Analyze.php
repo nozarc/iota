@@ -9,7 +9,7 @@ class Analyze extends CI_Model
 		{
 			parent::__construct();
 			$this->load->database('default');
-			$this->load->helper('db_batch','score');
+			$this->load->helper('db_batch','quiz_result');
 		}
 	public function show_all($value=null)
 	{
@@ -57,11 +57,12 @@ class Analyze extends CI_Model
 		{
 			if (empty($done)) {
 				$this->db->insert($this->db->dbprefix.'analyze',$data);
+				return true;
 			}
 			elseif ($done='done') {
 				$this->db->where('id',$data)->update($this->db->dbprefix.'analyze',array('done'=>'Y'));
+				return true;
 			}
-			return true;
 		}
 	public function updateNew($data=null,$id=null)
 		{

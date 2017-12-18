@@ -67,16 +67,35 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 				$score[$key]['correct']=$correct;
 				$score[$key]['alpha']=$alpha;
 				break;
-			
-			default:
-				# code...
-				break;
 		}
-		/*
-		$score[$key]['wrong_answer']=$wrong_answer;
-		$score[$key]['diffcount']=$diffcount;
-		$score[$key]['count']=$count;
-		*/
 	}
 	return $score;
+}
+function analyze($data_x=null,$data_y=null)
+{
+	$totalstudent=count($data_y);
+	foreach ($data_x as $key => $value) {
+		$totalcorrect=0;
+		foreach ($data_y as $k1 => $v1) {
+			if ($value==$v1['answer'][$key]) {
+				$totalcorrect=$totalcorrect+1;
+			}
+		}
+		$analyze[$key]['totalcorrect']=$totalcorrect;
+		$coefficient=number_format($totalcorrect/$totalstudent, 2);
+		$analyze[$key]['coefficient']=$coefficient;
+		switch (true) {
+			case (0.00<=$coefficient and $coefficient<=0.30):
+				$analyze[$key]['classification']='Difficult';
+				break;
+			case (0.30<$coefficient and $coefficient<=0.70):
+				$analyze[$key]['classification']='Moderate';
+				break;
+			case (0.70<$coefficient and $coefficient<=1):
+				$analyze[$key]['classification']='Easy';
+				break;
+		}
+	}
+	
+	return $analyze;
 }

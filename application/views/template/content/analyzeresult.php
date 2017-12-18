@@ -117,9 +117,33 @@
                         </a>
                         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
                           <div class="panel-body">
-                            <p><strong>Collapsible Item 2 data</strong>
-                            </p>
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor,
+                            <table id="datatable-fixed-header2" class="table table-striped table-bordered dt-responsive nowrap">
+                              <thead>
+                                <tr>
+                                  <th rowspan="2">Question No.</th>
+                                  <th rowspan="2">Answered Correctly</th>
+                                  <th colspan="2">Difficulty Level</th>
+                                </tr>
+                                <tr>
+                                  <th>Coefficient</th>
+                                  <th>Classification</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <?php
+                                foreach ($result as $reskey => $resval) {
+                                ?>
+                                <tr>
+                                  <th scope="row" class="answer"><?php echo $reskey;?></th>
+                                  <td class="answer"><?php echo $resval['totalcorrect'];?></td>
+                                  <td class="answer"><?php echo $resval['coefficient'];?></td>
+                                  <td class="answer"><?php echo $resval['classification'];?></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                              </tbody>
+                            </table>
                           </div>
                         </div>
                       </div>
@@ -588,7 +612,9 @@
         var table = $('#datatable-fixed-header').DataTable({
           fixedHeader: true
         });
-
+        var table = $('#datatable-fixed-header2').DataTable({
+          fixedHeader: true
+        });
         TableManageButtons.init();
       });
     </script>
