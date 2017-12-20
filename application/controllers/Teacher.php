@@ -179,13 +179,15 @@ class Teacher extends CI_Controller
 					if (empty($this->analyze->get_score($data_x))) {
 						$this->analyze->ins_score(score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid)),'batch');
 					}
-					$data['result']=analyze($data['quiz']['answer_key'],$data['student']);
+					$data['group']=batch_build($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'classgroup');
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
-					$data['lol']['student']=$data['student'];
-					$data['lol']['result']=$data['result'];
+					$data['result']=analyze($data['quiz'],$data['group']);
+				//	$data['lol']['score']=$data['score'];
+				//	$data['lol']['result']=$data['result'];
 					$this->template->display('analyzeresult',$data);
 				}
 				break;
+
 			case 'delete':
 				if(!empty($data_x)){
 					$id=array('id'=>$data_x);

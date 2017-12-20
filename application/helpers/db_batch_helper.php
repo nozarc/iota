@@ -2,33 +2,73 @@
 /**
 * 
 */
-function batch_build($val=null,$id=null,$for='quiz')
+function batch_build($data1=null,$data2=null,$for='quiz')
 	{
-		if($val!=null)
+		if($data1!=null)
 		{
 			switch ($for) {
 				case 'quiz':
 					$arr=array();
-					$arrcount=count($val['answer_key']);
+					$arrcount=count($data1['answer_key']);
 					for ($arrnum=1; $arrnum <= $arrcount; $arrnum++) { 
 						$arrx=array();
-						$arrx['id_analyze']=$id;
+						$arrx['id_analyze']=$data2;
 						$arrx['quiz_number']=$arrnum;
-						$arrx['answer_key']=$val['answer_key'][$arrnum];
-						$arrx['question']=$val['question'][$arrnum];
-						$arrx['measured_capability']=$val['measured_capability'][$arrnum];
+						$arrx['answer_key']=$data1['answer_key'][$arrnum];
+						$arrx['question']=$data1['question'][$arrnum];
+						$arrx['measured_capability']=$data1['measured_capability'][$arrnum];
 						array_push($arr,$arrx);
 					}
 					return $arr;
 					break;
 				
+				case 'classgroup':
+					function sortbyscoredesc($a, $b)
+					{
+						return $b['correct'] - $a['correct'];
+					}
+					function sortbyscoreasc($a, $b)
+					{
+						return $a['correct'] - $b['correct'];
+					}
+					foreach ($data1 as $key => $value) {
+						foreach ($value as $k => $v) {
+							$arrx[$value->user_id][$k]=$v;
+							foreach ($data2 as $k2 => $v2) {
+								if ($value->user_id==$v2['user_id']) {
+									$arrx[$value->user_id]['correct']=$v2['correct'];
+									$arrx[$value->user_id]['alpha']=$v2['alpha'];
+									$arrx[$value->user_id]['answer']=$v2['answer'];
+
+								}
+							}
+						}
+					}
+					$arrxcount=count($arrx);
+					switch (true) {
+						
+						case ($arrxcount<100 and ($arrxcount%2==0)):
+							$size=$arrxcount*(50/100);
+							break;
+						
+						case ($arrxcount>=100 or ($arrxcount%2!=0)):
+							$size=ceil($arrxcount*(27/100));
+							break;
+					}
+					uasort($arrx, 'sortbyscoredesc');
+					$analysis['upper']=array_slice($arrx, 0, $size, true);
+					$analysis['lower']=array_reverse(array_slice(array_reverse($arrx,true), 0, $size, true),true);
+				//	$analysis['size']=$arrx;
+					return $analysis;
+					break;
+
 				case 'answer':
 					$arr=array();
-					foreach ($val as $key => $value) {
-						$arrcount=count($val[$key]);
+					foreach ($data1 as $key => $value) {
+						$arrcount=count($data1[$key]);
 						for ($arrnum=1; $arrnum <= $arrcount; $arrnum++) { 
 							$arrx=array();
-							$arrx['id_analyze']=$id;
+							$arrx['id_analyze']=$data2;
 							$arrx['user_id']=$key;
 							$arrx['quiz_number']=$arrnum;
 							$arrx['answer']=$value[$arrnum];
@@ -75,6 +115,7 @@ function batch_unbuild($data1=null,$data2=null,$for='answer')
 								if ($value->user_id==$v2['user_id']) {
 									$arrx[$value->user_id]['correct']=$v2['correct'];
 									$arrx[$value->user_id]['alpha']=$v2['alpha'];
+									$arrx[$value->user_id]['status']=$v2['status'];
 								}
 							}
 						}

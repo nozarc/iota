@@ -3,7 +3,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3><small></small></h3>
+                <h3>Analyze Result<small></small></h3>
               </div>
 
               <div class="title_right">
@@ -23,12 +23,13 @@
         print_r(!empty($lol)?$lol:null);
         ?>
       </pre>
-<?php echo empty($lol)?"-->":null;?>         
+<?php echo empty($lol)?"-->":null;?>     
             <div class="clearfix"></div>
+            <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2><i class="fa fa-align-left"></i> Analyze Result <small></small></h2>
+                    <h2><i class="fa fa-align-left"></i> Quiz Result <small></small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -36,15 +37,7 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <!-- start accordion -->
-                    <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
-                      <div class="panel ">
-                        <a class="panel-heading " role="tab" id="headingOne" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                          <h4 class="panel-title">Quiz Result</h4>
-                        </a>
-                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                          <div class="panel-body">
-                            <table id="datatable-fixed-header" class="table table-striped table-bordered dt-responsive nowrap">
+                    <table id="datatable-responsive" class="table table-hover table-condensed table-bordered dt-responsive nowrap">
                               <style type="text/css">
                                 th{
                                   text-align: center;
@@ -63,9 +56,9 @@
                                   <th rowspan="2">No.</th>
                                   <th rowspan="2">Student</th>
                                   <th colspan="<?php echo count($quiz['answer_key']); ?>">No. Quiz</th>
-                                  <th rowspan="2">Correct Answer</th>
+                                  <th rowspan="2">Correct<br>Answer</th>
                                   <th rowspan="2">Score</th>
-                                  <th rowspan="2">Alphabetical Score</th>
+                                  <th rowspan="2">Alphabetical<br>Score</th>
                                 </tr>
                                 <tr>
                                 <?php
@@ -79,11 +72,13 @@
                               </thead>
                               <tbody>
                               <?php 
+                              $pass=0;
                                 foreach ($student as $key => $value) {
                                   $num=$key+1;
                                   $show_score=$score[$student[$key]['uid']]['score'];
                                   $show_correct=$score[$student[$key]['uid']]['correct'];
                                   $show_alpha=$score[$student[$key]['uid']]['alpha'];
+                                  $show_status=$score[$student[$key]['uid']]['status'];
                                 ?>
                                   <tr>
                                     <th scope="row"><?php echo $num; ?></th>
@@ -100,148 +95,120 @@
                                     }
                                   ?>
                                     <td class="answer"><?php echo $show_correct; ?></td>
-                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":null;?>"><?php echo $show_score; ?></td>
+                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":"alert alert-success";?>"><?php echo $show_score."/".$show_status; ?></td>
                                     <td class="answer" ><?php echo $show_alpha; ?></td>
                                   </tr>
                                 <?php
+                                  if ($show_status=='Pass') {
+                                    $pass=$pass+1;
+                                  }
                                 }
+                                $notpass=$num-$pass;
                               ?>
                               </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel">
-                        <a class="panel-heading collapsed" role="tab" id="headingTwo" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                          <h4 class="panel-title">Question Analysis</h4>
-                        </a>
-                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                          <div class="panel-body">
-                            <table id="datatable-fixed-header2" class="table table-striped table-bordered dt-responsive nowrap">
-                              <thead>
-                                <tr>
-                                  <th rowspan="2">Question No.</th>
-                                  <th rowspan="2">Answered Correctly</th>
-                                  <th colspan="2">Difficulty Level</th>
-                                </tr>
-                                <tr>
-                                  <th>Coefficient</th>
-                                  <th>Classification</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <?php
-                                foreach ($result as $reskey => $resval) {
-                                ?>
-                                <tr>
-                                  <th scope="row" class="answer"><?php echo $reskey;?></th>
-                                  <td class="answer"><?php echo $resval['totalcorrect'];?></td>
-                                  <td class="answer"><?php echo $resval['coefficient'];?></td>
-                                  <td class="answer"><?php echo $resval['classification'];?></td>
-                                </tr>
-                                <?php
-                                }
-                                ?>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel">
-                        <a class="panel-heading collapsed" role="tab" id="headingThree" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                          <h4 class="panel-title">Collapsible Group Items #3</h4>
-                        </a>
-                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                          <div class="panel-body">
-                            <p><strong>Collapsible Item 3 data</strong>
-                            </p>
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- end of accordion -->
+                    </table>
                   </div>
                 </div>
               </div>
-<!--
+            </div>
+            <div class="row">  
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><i class="fa fa-align-left"></i> Question Analysis <small></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <table id="datatable-fixed-header2" class="table table-striped table-bordered dt-responsive nowrap">
+                      <thead>
+                        <tr>
+                          <th rowspan="2">Question<br>No.</th>
+                          <th rowspan="2">Answered<br>Correctly</th>
+                          <th colspan="2">Difficulty Level</th>
+                          <th colspan="2">Distinguish Power</th>
+                        </tr>
+                        <tr>
+                          <th>Coefficient</th>
+                          <th>Classification</th>
+                          <th>Coefficient</th>
+                          <th>Classification</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php
+                        $difficulty['difficult']=0;
+                        $difficulty['moderate']=0;
+                        $difficulty['easy']=0;
+                        $distinguish_power['awful']=0;
+                        $distinguish_power['bad']=0;
+                        $distinguish_power['fair']=0;
+                        $distinguish_power['good']=0;
+                        $distinguish_power['excellent']=0;
+
+                        foreach ($result as $reskey => $resval) {
+                          $totalcorrect=$resval['totalcorrect'];
+                          $dl_coefficient=$resval['difficulty_level']['coefficient'];
+                          $dl_classification=$resval['difficulty_level']['classification'];
+                          $dp_coefficient=$resval['distinguish_power']['coefficient'];
+                          $dp_classification=$resval['distinguish_power']['classification'];
+                          
+                          switch (true) {
+                            case ($dl_classification=='Difficult'):
+                                $difficulty['difficult']++;
+                              break;
+                            case ($dl_classification=='Moderate'):
+                                $difficulty['moderate']++;
+                              break;
+                            case ($dl_classification=='Easy'):
+                                $difficulty['easy']++;
+                              break;
+                          }
+                          switch (true) {
+                            case ($dp_classification=='Awful'):
+                              $distinguish_power['awful']++;
+                              break;
+                            case ($dp_classification=='Bad'):
+                              $distinguish_power['bad']++;
+                              break;
+                            case ($dp_classification=='Fair'):
+                              $distinguish_power['fair']++;
+                              break;
+                            case ($dp_classification=='Good'):
+                              $distinguish_power['good']++;
+                              break;
+                            case ($dp_classification=='Excellent'):
+                              $distinguish_power['excellent']++;
+                              break;
+                          }
+                        ?>
+                        <tr>
+                          <th scope="row" class="answer"><?php echo $reskey;?></th>
+                          <td class="answer"><?php echo $totalcorrect;?></td>
+                          <td class="answer"><?php echo $dl_coefficient;?></td>
+                          <td class="answer"><?php echo $dl_classification ;?></td>
+                          <td class="answer"><?php echo $dp_coefficient;?></td>
+                          <td class="answer"><?php echo $dp_classification;?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="row">
-              <div class="col-md-8 col-sm-8 col-xs-12">
+              <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Bar Graph</h2>
+                    <h2>Quiz Result Graph</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="mainb" style="height:350px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Mini Pie</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_mini_pie" style="height:350px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Pie Graph</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
@@ -249,275 +216,57 @@
                   <div class="x_content">
 
                     <div id="echart_pie" style="height:350px;"></div>
-
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Pie Area</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_pie2" style="height:350px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Donut Graph</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_donut" style="height:350px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Scatter Graph</h2>
+                    <h2>Quiz Result Graph</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
 
-                    <div id="echart_scatter" style="height:350px;"></div>
-
+                    <div id="mainb" style="height:350px;"></div>
                   </div>
                 </div>
               </div>
-
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Line Graph</h2>
+                    <h2>Difficulty Level Graph</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-
-                    <div id="echart_line" style="height:350px;"></div>
-
+                    <div id="difficulty_level" style="height: 350px;"></div>
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
+              <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Horizontal Bar</h2>
+                    <h2>Distinguish Power Graph</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-
-                    <div id="echart_bar_horizontal" style="height:370px;"></div>
-
+                    <div id="distinguish_power" style="height: 350px;"></div>
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-8 col-sm-8 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>World Map</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_world_map" style="height:370px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Pyramid</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_pyramid" style="height:370px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Sonar</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-
-                    <div id="echart_sonar" style="height:370px;"></div>
-
-                  </div>
-                </div>
-              </div>
-
-
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="x_panel">
-                  <div class="x_title">
-                    <h2>Guage</h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>
-                      <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li><a href="#">Settings 1</a>
-                          </li>
-                          <li><a href="#">Settings 2</a>
-                          </li>
-                        </ul>
-                      </li>
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="x_content">
-                    <div id="echart_guage" style="height:370px;"></div>
-                  </div>
-                </div>
-              </div>
-
             </div>
--->
+
           </div>
         </div>
         <!-- /page content -->
@@ -832,6 +581,301 @@
               fontFamily: 'Arial, Verdana, sans-serif'
           }
       };
+
+      var dataStyle = {
+        normal: {
+          label: {
+            show: false
+          },
+          labelLine: {
+            show: false
+          }
+        }
+      };
+
+      var placeHolderStyle = {
+        normal: {
+          color: 'rgba(0,0,0,0)',
+          label: {
+            show: false
+          },
+          labelLine: {
+            show: false
+          }
+        },
+        emphasis: {
+          color: 'rgba(0,0,0,0)'
+        }
+      };      
+
+      var echartPie = echarts.init(document.getElementById('echart_pie'), theme);
+
+      echartPie.setOption({
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          x: 'center',
+          y: 'bottom',
+          data: ['Pass', 'Did Not Pass']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel'],
+              option: {
+                funnel: {
+                  x: '25%',
+                  width: '50%',
+                  funnelAlign: 'left',
+                  max: 1548
+                }
+              }
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        calculable: true,
+        series: [{
+          name: 'Student',
+          type: 'pie',
+          radius: '60%',
+          center: ['50%', '48%'],
+          data: [{
+            value: <?php echo $pass;?>,
+            name: 'Pass'
+          }, {
+            value: <?php echo $notpass;?>,
+            name: 'Did Not Pass'
+          }]
+        }]
+      });
+/*
+      var difficulty_level = echarts.init(document.getElementById('difficulty_level'), theme);
+
+      difficulty_level.setOption({
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          x: 'center',
+          y: 'bottom',
+          data: ['Difficult', 'Moderate', 'Easy']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel'],
+              option: {
+                funnel: {
+                  x: '25%',
+                  width: '50%',
+                  funnelAlign: 'left',
+                  max: 1548
+                }
+              }
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        calculable: true,
+        series: [{
+          name: 'Difficulty Level',
+          type: 'pie',
+          radius: '60%',
+          center: ['50%', '48%'],
+          data: [{
+            value: <?php echo $difficulty['difficult']; ?>,
+            name: 'Difficult'
+          }, {
+            value: <?php echo $difficulty['moderate']; ?>,
+            name: 'Moderate'
+          }, {
+            value: <?php echo $difficulty['easy']; ?>,
+            name: 'Easy'
+          }]
+        }]
+      });
+*/
+      var distinguish_power = echarts.init(document.getElementById('distinguish_power'), theme);
+
+      distinguish_power.setOption({
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          x: 'center',
+          y: 'bottom',
+          data: ['Awful', 'Bad', 'Fair', 'Good', 'Excellent']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel'],
+              option: {
+                funnel: {
+                  x: '25%',
+                  width: '50%',
+                  funnelAlign: 'left',
+                  max: 1548
+                }
+              }
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        calculable: true,
+        series: [{
+          name: 'Distingusi Power',
+          type: 'pie',
+          radius: '60%',
+          center: ['50%', '48%'],
+          data: [{
+            value: <?php echo $distinguish_power['awful']; ?>,
+            name: 'Awful'
+          }, {
+            value: <?php echo $distinguish_power['bad']; ?>,
+            name: 'Bad'
+          }, {
+            value: <?php echo $distinguish_power['fair']; ?>,
+            name: 'Fair'
+          }, {
+            value: <?php echo $distinguish_power['good']; ?>,
+            name: 'Good'
+          }, {
+            value: <?php echo $distinguish_power['excellent']; ?>,
+            name: 'Excellent'
+          }]
+        }]
+      });
+      var difficulty_level = echarts.init(document.getElementById('difficulty_level'), theme);
+
+      difficulty_level.setOption({
+        title: {
+          text: 'Difficulty Level',
+          subtext: '',
+          sublink: '#',
+          x: 'center',
+          y: 'center',
+          itemGap: 20,
+          textStyle: {
+            color: 'rgba(30,144,255,0.8)',
+            fontFamily: 'Arial',
+            fontSize: 25,
+            fontWeight: 'bolder'
+          }
+        },
+        tooltip: {
+          show: true,
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+          orient: 'vertical',
+          x: 400,
+          y: 50,
+          itemGap: 12,
+          data: ['Difficult', 'Moderate', 'Easy'],
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: {
+              show: true
+            },
+            dataView: {
+              show: true,
+              title: "Text View",
+              lang: [
+                "Text View",
+                "Close",
+                "Refresh",
+              ],
+              readOnly: false
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        series: [{
+          name: null,
+          type: 'pie',
+          clockWise: false,
+          radius: [105, 130],
+          itemStyle: dataStyle,
+          data: [{
+            value: <?php echo $difficulty['difficult']; ?>,
+            name: 'Difficult'
+          }, {
+            value: <?php echo ($difficulty['moderate']+$difficulty['easy']); ?>,
+            name: null,
+            itemStyle: placeHolderStyle
+          }]
+        }, {
+          name: null,
+          type: 'pie',
+          clockWise: false,
+          radius: [80, 105],
+          itemStyle: dataStyle,
+          data: [{
+            value: <?php echo $difficulty['moderate']; ?>,
+            name: 'Moderate'
+          }, {
+            value: <?php echo ($difficulty['easy']+$difficulty['difficult']); ?>,
+            name: null,
+            itemStyle: placeHolderStyle
+          }]
+        }, {
+          name: null,
+          type: 'pie',
+          clockWise: false,
+          radius: [25, 80],
+          itemStyle: dataStyle,
+          data: [{
+            value: <?php echo $difficulty['easy']; ?>,
+            name: 'Easy'
+          }, {
+            value: <?php echo ($difficulty['moderate']+$difficulty['difficult']); ?>,
+            name: null,
+            itemStyle: placeHolderStyle
+          }]
+        }]
+      });
 
       var echartBar = echarts.init(document.getElementById('mainb'), theme);
 
@@ -2018,94 +2062,6 @@
           }]
         }]
       });
-
-      var echartPie = echarts.init(document.getElementById('echart_pie'), theme);
-
-      echartPie.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-          x: 'center',
-          y: 'bottom',
-          data: ['Direct Access', 'E-mail Marketing', 'Union Ad', 'Video Ads', 'Search Engine']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            magicType: {
-              show: true,
-              type: ['pie', 'funnel'],
-              option: {
-                funnel: {
-                  x: '25%',
-                  width: '50%',
-                  funnelAlign: 'left',
-                  max: 1548
-                }
-              }
-            },
-            restore: {
-              show: true,
-              title: "Restore"
-            },
-            saveAsImage: {
-              show: true,
-              title: "Save Image"
-            }
-          }
-        },
-        calculable: true,
-        series: [{
-          name: 'dataone',
-          type: 'pie',
-          radius: '60%',
-          center: ['50%', '48%'],
-          data: [{
-            value: 335,
-            name: 'Direct Access'
-          }, {
-            value: 310,
-            name: 'E-mail Marketing'
-          }, {
-            value: 234,
-            name: 'Union Ad'
-          }, {
-            value: 135,
-            name: 'Video Ads'
-          }, {
-            value: 1548,
-            name: 'Search Engine'
-          }]
-        }]
-      });
-
-      var dataStyle = {
-        normal: {
-          label: {
-            show: false
-          },
-          labelLine: {
-            show: false
-          }
-        }
-      };
-
-      var placeHolderStyle = {
-        normal: {
-          color: 'rgba(0,0,0,0)',
-          label: {
-            show: false
-          },
-          labelLine: {
-            show: false
-          }
-        },
-        emphasis: {
-          color: 'rgba(0,0,0,0)'
-        }
-      };
 
       var echartMiniPie = echarts.init(document.getElementById('echart_mini_pie'), theme);
 
