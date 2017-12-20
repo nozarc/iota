@@ -103,7 +103,8 @@
                                     $pass=$pass+1;
                                   }
                                 }
-                                $notpass=$num-$pass;
+                                $totalstudent=$num;
+                                $notpass=$totalstudent-$pass;
                               ?>
                               </tbody>
                     </table>
@@ -206,7 +207,7 @@
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Quiz Result Graph</h2>
+                    <h2>Percentage of Completeness</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -222,7 +223,7 @@
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Quiz Result Graph</h2>
+                    <h2>Score Distribution</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -878,17 +879,19 @@
       });
 
       var echartBar = echarts.init(document.getElementById('mainb'), theme);
-
+      <?php
+        
+      ?>
       echartBar.setOption({
         title: {
-          text: 'Graph title',
-          subtext: 'Graph Sub-text'
+          text: 'Score Distribution',
+          subtext: 'Based on Alphabetical Score'
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data: ['sales', 'purchases']
+          data: ['Student']
         },
         toolbox: {
           show: false
@@ -896,19 +899,20 @@
         calculable: false,
         xAxis: [{
           type: 'category',
-          data: ['1?', '2?', '3?', '4?', '5?', '6?', '7?', '8?', '9?', '10?', '11?', '12?']
+          data: ['A', 'A-', 'B', 'B-', 'C', 'C-', 'D', 'D-', 'E', 'E-']
         }],
         yAxis: [{
           type: 'value'
         }],
         series: [{
-          name: 'sales',
+          name: 'Student',
           type: 'bar',
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0],
           markPoint: {
             data: [{
-              type: 'max',
-              name: '???'
+              name: 'sales',
+              type: 'max'
+              
             }, {
               type: 'min',
               name: '???'
@@ -917,10 +921,12 @@
           markLine: {
             data: [{
               type: 'average',
-              name: '???'
+              name: 'Average'
             }]
           }
-        }, {
+        }
+        /*
+        , {
           name: 'purchases',
           type: 'bar',
           data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
@@ -943,7 +949,7 @@
               name: '???'
             }]
           }
-        }]
+        }*/]
       });
 
       var echartRadar = echarts.init(document.getElementById('echart_sonar'), theme);
