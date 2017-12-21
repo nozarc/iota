@@ -31,10 +31,10 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 		}
 		switch (true) {
 			case ($scorex<$data_z['min_score']):
-				$score[$key]['status']='Didn\'t Pass';
+				$status='Didn\'t Pass';
 				break;
 			case ($scorex>=$data_z['min_score']):
-				$score[$key]['status']='Pass';
+				$status='Pass';
 				
 				break;
 		}
@@ -75,6 +75,7 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 		switch ($method) {
 			case 'info':
 				$score[$key]['correct']=$correct;
+				$score[$key]['status']=$status;
 				$score[$key]['alpha']=$alpha;
 				$score[$key]['answer']=$answer;
 				$score[$key]['answer_key']=$answer_key;
@@ -86,33 +87,43 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 function analyze($data_x=null,$data_y=null,$data_z=null)
 {
 	$student=array_merge($data_y['upper'],$data_y['lower']);
+	sort($student);
 	$uppergroup=$data_y['upper'];
 	$lowergroup=$data_y['lower'];
 	$totalstudent=count($student);
 	$totalupper=count($uppergroup);
 	$totallower=count($lowergroup);
+
 	foreach ($data_x['answer_key'] as $key => $value) {
-		$totalcorrect=0;
+		$total_correct_student=0;
 		$totalcorrectupper=0;
 		$totalcorrectlower=0;
+		$student_score=array();
+		$total_quiz_score=0;
+		$total_all_score=0;
+		$sum_X=0;
+		//part of validity test
+		
+		//end of part of validity test
+
+		///difficulty level//
 		foreach ($student as $k1 => $v1) {
+			//part of validity test
+			$total_all_score=$total_all_score+$v1['score'];
+			//end of part of validity test
 			if ($value==$v1['answer'][$key]) {
-				$totalcorrect=$totalcorrect+1;
+				$total_correct_student=$total_correct_student+1;
+				//part of validity test
+				$student_score[$v1['user_id']]=$v1['score'];
+				$total_quiz_score=$v1['score']+$total_quiz_score;
+				//end of part of validity test
 			}
 		}
-		foreach ($uppergroup as $kupper => $vupper) {
-			if ($value==$vupper['answer'][$key]) {
-				$totalcorrectupper=$totalcorrectupper+1;
-			}
-		}
-		foreach ($lowergroup as $klower => $vlower) {
-			if ($value==$vlower['answer'][$key]) {
-				$totalcorrectlower=$totalcorrectlower+1;
-			}
-		}
-		$analyze[$key]['totalcorrect']=$totalcorrect;
-		$difficult_coefficient=number_format($totalcorrect/$totalstudent, 2);
+		//end of part of validity test
+		$analyze[$key]['total_correct_student']=$total_correct_student;
+		$difficult_coefficient=number_format($total_correct_student/$totalstudent, 2);
 		$analyze[$key]['difficulty_level']['coefficient']=$difficult_coefficient;
+
 		switch (true) {
 			case (0.00<=$difficult_coefficient and $difficult_coefficient<=0.30):
 				$analyze[$key]['difficulty_level']['classification']='Difficult';
@@ -123,6 +134,19 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 			case (0.70<$difficult_coefficient and $difficult_coefficient<=1):
 				$analyze[$key]['difficulty_level']['classification']='Easy';
 				break;
+		}
+		///end of difficulty level////////////
+
+		///distinguish power//////
+		foreach ($uppergroup as $kupper => $vupper) {
+			if ($value==$vupper['answer'][$key]) {
+				$totalcorrectupper=$totalcorrectupper+1;
+			}
+		}
+		foreach ($lowergroup as $klower => $vlower) {
+			if ($value==$vlower['answer'][$key]) {
+				$totalcorrectlower=$totalcorrectlower+1;
+			}
 		}
 		$analyze[$key]['totalcorrectupper']=$totalcorrectupper;
 		$analyze[$key]['totalcorrectlower']=$totalcorrectlower;
@@ -145,8 +169,43 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 				$analyze[$key]['distinguish_power']['classification']='Excellent';
 				break;
 		}
+		///end of distinguish ////
+		//validity test
+		if ($total_correct_student!=0) {
+			$Mp=$total_quiz_score/$total_correct_student;
+		}
+		else{
+			$Mp=0;
+		}
+		if ($total_all_score!=0) {
+			$Mt=$total_all_score/$totalstudent;
+		}
+		else{
+			$Mt=0;
+		}
+		foreach ($student as $k2 => $v2) {
+			$x_sqrd=pow(($Mt-$v2['score']),2);
+			$X_sqrd[$v2['user_id']]=$x_sqrd;
+			$sum_X=$x_sqrd+$sum_X;
+		}
+		$p=$total_correct_student/$totalstudent;
+		$q=1-$p;
+		$sqrtpq=sqrt($p/$q);
+		$St=sqrt($sum_X/$totalstudent);
+		$df=$totalstudent-2;
+		$Rpbi=(($Mp-$Mt)/$St)*sqrt($p/$q);
+		$t_table=PHPExcel_Calculation_Statistical::TINV((5/100),$df); // you need to load excel library first
+		$r_table=$t_table/sqrt($df+pow($t_table,2));
+		if ($Rpbi>$r_table) {
+			$validity='Valid';
+		}
+		else $validity='Invalid';
+		$analyze[$key]['validity']['coefficient']=number_format($Rpbi,4);
+		$analyze[$key]['r_table']=$r_table;
+		$analyze[$key]['validity']['classification']=$validity;
+		///end of validity test
 	}
 
-//	$analyze['data_z']=$data_z;
+//	$analyze['data_y']=$data_y;
 	return $analyze;
 }

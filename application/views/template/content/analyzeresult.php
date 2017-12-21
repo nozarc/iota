@@ -36,8 +36,8 @@
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
-                    <table id="datatable-responsive" class="table table-hover table-condensed table-bordered dt-responsive nowrap">
+                  <div class="x_content <?php if(count($quiz['answer_key'])>15){echo "pre-scrollable";} ?>">
+                    <table id="datatable-fixed-header" class="table table-hover table-condensed table-bordered " >
                               <style type="text/css">
                                 th{
                                   text-align: center;
@@ -72,7 +72,10 @@
                               </thead>
                               <tbody>
                               <?php 
-                              $pass=0;
+                                $pass=0;
+                                $alphax['a']=0;$alphax['a_minus']=0;$alphax['b']=0;$alphax['b_minus']=0;
+                                $alphax['c']=0;$alphax['c_minus']=0;$alphax['d']=0;$alphax['d_minus']=0;
+                                $alphax['e']=0;$alphax['e_minus']=0;
                                 foreach ($student as $key => $value) {
                                   $num=$key+1;
                                   $show_score=$score[$student[$key]['uid']]['score'];
@@ -95,14 +98,51 @@
                                     }
                                   ?>
                                     <td class="answer"><?php echo $show_correct; ?></td>
-                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":"alert alert-success";?>"><?php echo $show_score."/".$show_status; ?></td>
+                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":"alert alert-success";?>"><?php echo $show_score;//."/".$show_status; ?></td>
                                     <td class="answer" ><?php echo $show_alpha; ?></td>
                                   </tr>
                                 <?php
                                   if ($show_status=='Pass') {
                                     $pass=$pass+1;
                                   }
+                                  switch (true) {
+                                    case ($show_alpha=='A'):
+                                      $alphax['a']++;
+                                      break;
+                                    case ($show_alpha=='A-'):
+                                      $alphax['a_minus']++;
+                                      break;
+                                    case ($show_alpha=='B'):
+                                      $alphax['b']++;
+                                      break;
+                                    case ($show_alpha=='B-'):
+                                      $alphax['b_minus']++;
+                                      break;
+                                    case ($show_alpha=='C'):
+                                      $alphax['c']++;
+                                      break;
+                                    case ($show_alpha=='C-'):
+                                      $alphax['c_minus']++;
+                                      break;
+                                    case ($show_alpha=='D'):
+                                      $alphax['d']++;
+                                      break;
+                                    case ($show_alpha=='D-'):
+                                      $alphax['d_minus']++;
+                                      break;
+                                    case ($show_alpha=='E'):
+                                      $alphax['e']++;
+                                      break;
+                                    case ($show_alpha=='E-'):
+                                      $alphax['e_minus']++;
+                                      break;
+                                  }
                                 }
+
+                                foreach ($alphax as $alphkey => $alphval) {
+                                  $alpha[]=$alphval;
+                                }
+                                  $alpha=json_encode($alpha);
                                 $totalstudent=$num;
                                 $notpass=$totalstudent-$pass;
                               ?>
@@ -131,8 +171,21 @@
                           <th rowspan="2">Answered<br>Correctly</th>
                           <th colspan="2">Difficulty Level</th>
                           <th colspan="2">Distinguish Power</th>
+                          <th colspan="2">Validity 
+                            <a class="source" title="Click It" onclick="new PNotify({
+                                  title: 'Using Point Biserial Correlation Formula',
+                                  text: 'Supardi. 2015. Penilaian Autentik. Jakarta:Rajagrafindo Persada',
+                                  type: 'info',
+                                  styling: 'bootstrap3',
+                                  nonblock:{nonblock:true}
+                              });">
+                              <sup>[?]</sup>
+                            </a>
+                          </th>
                         </tr>
                         <tr>
+                          <th>Coefficient</th>
+                          <th>Classification</th>
                           <th>Coefficient</th>
                           <th>Classification</th>
                           <th>Coefficient</th>
@@ -149,13 +202,16 @@
                         $distinguish_power['fair']=0;
                         $distinguish_power['good']=0;
                         $distinguish_power['excellent']=0;
-
+                        $validity['valid']=0;
+                        $validity['invalid']=0;
                         foreach ($result as $reskey => $resval) {
-                          $totalcorrect=$resval['totalcorrect'];
+                          $totalcorrect=$resval['total_correct_student'];
                           $dl_coefficient=$resval['difficulty_level']['coefficient'];
                           $dl_classification=$resval['difficulty_level']['classification'];
                           $dp_coefficient=$resval['distinguish_power']['coefficient'];
                           $dp_classification=$resval['distinguish_power']['classification'];
+                          $vl_coeffcient=$resval['validity']['coefficient'];
+                          $vl_classification=$resval['validity']['classification'];
                           
                           switch (true) {
                             case ($dl_classification=='Difficult'):
@@ -185,6 +241,14 @@
                               $distinguish_power['excellent']++;
                               break;
                           }
+                          switch (true) {
+                            case ($vl_classification=='Valid'):
+                              $validity['valid']++;
+                              break;
+                            case ($vl_classification=='Invalid'):
+                              $validity['invalid']++;
+                              break;
+                          }
                         ?>
                         <tr>
                           <th scope="row" class="answer"><?php echo $reskey;?></th>
@@ -193,6 +257,8 @@
                           <td class="answer"><?php echo $dl_classification ;?></td>
                           <td class="answer"><?php echo $dp_coefficient;?></td>
                           <td class="answer"><?php echo $dp_classification;?></td>
+                          <td class="answer"><?php echo $vl_coeffcient; ?></td>
+                          <td class="answer"><?php echo $vl_classification; ?></td>
                         </tr>
                         <?php
                         }
@@ -239,7 +305,7 @@
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Difficulty Level Graph</h2>
+                    <h2>Difficulty Level </h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -254,7 +320,7 @@
               <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Distinguish Power Graph</h2>
+                    <h2>Distinguish Power</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>
@@ -266,6 +332,21 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Quiz Validity</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div id="validity" style="height: 350px;"></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -274,8 +355,10 @@
 
     <!-- jQuery -->
     <script src="<?php echo $_tpath;?>/vendors/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <!--<script src="<?php echo $_tpath;?>/vendors/bootstrap/dist/js/bootstrap.min.js"></script> duplicated on header-->
+        <!-- PNotify -->
+    <script src="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.js"></script>
+    <script src="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="<?php echo $_tpath;?>/vendors/pnotify/dist/pnotify.nonblock.js"></script>
     <!-- FastClick -->
     <script src="<?php echo $_tpath;?>/vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
@@ -300,7 +383,6 @@
     <script src="<?php echo $_tpath;?>/vendors/pdfmake/build/pdfmake.min.js"></script>
     <script src="<?php echo $_tpath;?>/vendors/pdfmake/build/vfs_fonts.js"></script>
 
-    <!--<script src="<?php echo $_tpath;?>/build/js/custom.min.js"></script>-->
     <!-- Datatables -->
     <script>
       $(document).ready(function() {
@@ -354,7 +436,7 @@
         $('#datatable-scroller').DataTable({
           ajax: "js/datatables/json/scroller-demo.json",
           deferRender: true,
-          scrollY: 380,
+          scrollY: 200,
           scrollCollapse: true,
           scroller: true
         });
@@ -365,10 +447,15 @@
         var table = $('#datatable-fixed-header2').DataTable({
           fixedHeader: true
         });
+
         TableManageButtons.init();
       });
     </script>
     <!-- /Datatables -->
+    
+
+
+    <!-- Echart -->
 
     <script type="text/javascript">
       var theme = {
@@ -661,63 +748,7 @@
           }]
         }]
       });
-/*
-      var difficulty_level = echarts.init(document.getElementById('difficulty_level'), theme);
 
-      difficulty_level.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-          x: 'center',
-          y: 'bottom',
-          data: ['Difficult', 'Moderate', 'Easy']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            magicType: {
-              show: true,
-              type: ['pie', 'funnel'],
-              option: {
-                funnel: {
-                  x: '25%',
-                  width: '50%',
-                  funnelAlign: 'left',
-                  max: 1548
-                }
-              }
-            },
-            restore: {
-              show: true,
-              title: "Restore"
-            },
-            saveAsImage: {
-              show: true,
-              title: "Save Image"
-            }
-          }
-        },
-        calculable: true,
-        series: [{
-          name: 'Difficulty Level',
-          type: 'pie',
-          radius: '60%',
-          center: ['50%', '48%'],
-          data: [{
-            value: <?php echo $difficulty['difficult']; ?>,
-            name: 'Difficult'
-          }, {
-            value: <?php echo $difficulty['moderate']; ?>,
-            name: 'Moderate'
-          }, {
-            value: <?php echo $difficulty['easy']; ?>,
-            name: 'Easy'
-          }]
-        }]
-      });
-*/
       var distinguish_power = echarts.init(document.getElementById('distinguish_power'), theme);
 
       distinguish_power.setOption({
@@ -879,9 +910,7 @@
       });
 
       var echartBar = echarts.init(document.getElementById('mainb'), theme);
-      <?php
-        
-      ?>
+      
       echartBar.setOption({
         title: {
           text: 'Score Distribution',
@@ -907,7 +936,7 @@
         series: [{
           name: 'Student',
           type: 'bar',
-          data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0],
+          data: <?php echo $alpha ; ?>,
           markPoint: {
             data: [{
               name: 'sales',
@@ -950,6 +979,78 @@
             }]
           }
         }*/]
+      });
+
+      var validity = echarts.init(document.getElementById('validity'), theme);
+      
+      validity.setOption({
+        tooltip: {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        calculable: true,
+        legend: {
+          x: 'center',
+          y: 'bottom',
+          data: ['Valid', 'Invalid']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel'],
+              option: {
+                funnel: {
+                  x: '25%',
+                  width: '50%',
+                  funnelAlign: 'center',
+                  max: 1548
+                }
+              }
+            },
+            restore: {
+              show: true,
+              title: "Restore"
+            },
+            saveAsImage: {
+              show: true,
+              title: "Save Image"
+            }
+          }
+        },
+        series: [{
+          name: 'Percentage of Quiz Validity ',
+          type: 'pie',
+          radius: ['35%', '55%'],
+          itemStyle: {
+            normal: {
+              label: {
+                show: true
+              },
+              labelLine: {
+                show: true
+              }
+            },
+            emphasis: {
+              label: {
+                show: true,
+                position: 'center',
+                textStyle: {
+                  fontSize: '14',
+                  fontWeight: 'normal'
+                }
+              }
+            }
+          },
+          data: [{
+            value: <?php echo $validity['valid'] ; ?>,
+            name: 'Valid'
+          }, {
+            value: <?php echo $validity['invalid'] ; ?>,
+            name: 'Invalid'
+          }]
+        }]
       });
 
       var echartRadar = echarts.init(document.getElementById('echart_sonar'), theme);
@@ -2772,3 +2873,4 @@
         }]
       });
     </script>
+    <!-- /Echart -->

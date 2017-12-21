@@ -10,7 +10,7 @@ class Teacher extends CI_Controller
 		parent::__construct();
 		$this->load->helper(array('url','form','db_batch','quiz_result'));
 		$this->load->model(array('users','schooldata','analyze'));
-		$this->load->library(array('form_validation','access','template','pagination','table','image_lib'));
+		$this->load->library(array('form_validation','access','template','pagination','table','image_lib','excel'));
 		if ($this->access->level()!='teacher') 
 		{
 			redirect('');
@@ -45,7 +45,7 @@ class Teacher extends CI_Controller
 						$this->form_validation->set_rules('subject','Subject','required');
 						$this->form_validation->set_rules('test_type','Test Type','required');
 						$this->form_validation->set_rules('score_scale','Score Scale','required|numeric');
-						$this->form_validation->set_rules('min_score','Minimum Score','required|decimal'); 
+						$this->form_validation->set_rules('min_score','Minimum Score','required|numeric'); 
 						$this->form_validation->set_rules('test_date','Test Date','alpha_dash');
 						$this->form_validation->set_rules('test_correction_date','Correction Date','alpha_dash');
 						$this->form_validation->set_rules('test_report_date','Test Report Date','alpha_dash');
@@ -182,12 +182,11 @@ class Teacher extends CI_Controller
 					$data['group']=batch_build($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'classgroup');
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
 					$data['result']=analyze($data['quiz'],$data['group']);
-					$data['lol']['score']=$data['score'];
-					$data['lol']['result']=$data['result'];
+				//	$data['lol']['score']=$data['score'];
+				//	$data['lol']['result']=$data['result'];
 					$this->template->display('analyzeresult',$data);
 				}
 				break;
-
 			case 'delete':
 				if(!empty($data_x)){
 					$id=array('id'=>$data_x);
