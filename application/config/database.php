@@ -138,11 +138,27 @@ $config['sidebar']=array(
 			'owner' =>'teacher'
 			),
 		array(
-			'name' =>'Analyze Items',
+			'name' =>'Analyze Quiz',
+			'href' =>null,
+			'class' =>'fa fa-area-chart',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' =>'5',
+			'owner' =>'teacher'
+			),
+		array(
+			'name' =>'Quiz',
 			'href' =>null,
 			'class' =>'fa fa-cogs',
 			'class_2'	=>'fa fa-chevron-down',
-			'parent' =>'5',
+			'parent' =>'6',
+			'owner' =>'teacher'
+			),
+		array(
+			'name' =>'Profile',
+			'href' =>'teacher/profile',
+			'class' =>'fa fa-user',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' =>'7',
 			'owner' =>'teacher'
 			),
 		array(
@@ -192,6 +208,13 @@ $config['sidebar']=array(
 			'href' =>'teacher/analyze/list',
 			'class' =>null,
 			'parent' =>'5',
+			'owner' =>'teacher'
+			),
+		array(
+			'name' =>'Quiz List',
+			'href' =>'teacher/quiz/list',
+			'class' =>null,
+			'parent' =>'6',
 			'owner' =>'teacher'
 			)
 	);

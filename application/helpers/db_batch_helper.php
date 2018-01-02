@@ -56,6 +56,7 @@ function batch_build($data1=null,$data2=null,$for='quiz')
 							break;
 					}
 					uasort($arrx, 'sortbyscoredesc');
+					$analysis['all']=$arrx;
 					$analysis['upper']=array_slice($arrx, 0, $size, true);
 					$analysis['lower']=array_reverse(array_slice(array_reverse($arrx,true), 0, $size, true),true);
 				//	$analysis['size']=$arrx;
@@ -96,6 +97,7 @@ function batch_unbuild($data1=null,$data2=null,$for='answer')
 						$arrx['uid']=$val2['user_id'];
 						$arrx['name']=$val2['name'];
 						$arrx['userphoto']=$val2['userphoto'];
+						$arrx['class']=$val2['class'];
 						foreach ($data1 as $k1 => $val1) {
 							if ($val1['user_id']==$val2['user_id']) {
 								$arry['answer'][$val1['quiz_number']]=$val1['answer'];

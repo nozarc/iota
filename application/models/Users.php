@@ -33,9 +33,7 @@ class Users extends CI_Model
 	}
 	public function get_person($uid)
 	{
-		return $this->db->select('*')->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'user.uid','left')->where($this->db->dbprefix.'user.uid',$uid)->get($this->db->dbprefix.'user');
-	//	$this->db->where('uid',$uid); 
-	//	return $this->db;
+		return $this->db->select('*')->join($this->db->dbprefix.'people',$this->db->dbprefix.'people.uid = '.$this->db->dbprefix.'user.uid')->where($this->db->dbprefix.'user.uid',$uid)->get($this->db->dbprefix.'user');
 	}
 	public function check_username($username,$uid=NULL)
 	{

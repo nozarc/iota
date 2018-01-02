@@ -276,7 +276,7 @@ class Admin extends CI_Controller
 				$this->load->library('upload',$imgupload);
 				if($this->upload->do_upload('school_logo'))
 						{
-							//start crop dan center gambar terupload 
+							//start crop and center uploaded image 
 							$imgedit=array
 										(
 											'source_image'		=> $this->upload->data()['full_path'],
@@ -301,7 +301,7 @@ class Admin extends CI_Controller
 							$this->image_lib->crop();
 							$this->image_lib->clear();
 							unset($imgedit);
-							//end of crop dan center
+							//end of crop and center
 							$imgedit=array
 										(
 											'height'			=>200,

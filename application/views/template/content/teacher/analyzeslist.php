@@ -64,11 +64,12 @@
                             <td><?php echo $val->score_scale ;?></td>
                             <td><?php echo $val->test_type ;?></td>
                             <td><?php echo $test_date ;?></td>
-                            <td><div class='btn-group' ><?php 
-                            echo anchor('teacher/analyze/result/'.$val->id,'Result','class="btn btn-xs btn-primary"');
-                            echo anchor('teacher/analyze/edit/'.$val->id,'Edit','class="btn btn-xs btn-success"');
-                            echo anchor('teacher/analyze/delete/'.$val->id,'Delete',array('class'=>'btn btn-xs btn-danger','onclick'=>"return confirm('Are you sure to delete it?')"));
-                            ?></div>
+                            <td>
+                              <div class='btn-group' >
+                                <a href="<?php echo $base_url; ?>teacher/analyze/result/<?php echo $val->id; ?>" class='btn btn-xs btn-primary' ><span class="fa fa-eye"></span> Result</a>
+                                <a href="<?php echo $base_url; ?>teacher/analyze/edit/<?php echo $val->id; ?>" class='btn btn-xs btn-success' ><span class="fa fa-edit"></span> Edit</a>
+                                <a onclick="return confirm('Are you sure to delete it?')" href="<?php echo $base_url; ?>teacher/analyze/delete/<?php echo $val->id; ?>" class='btn btn-xs btn-danger' ><span class="fa fa-trash-o"></span> Delete</a>
+                              </div>
                             </td>
                           </tr>
                         <?php

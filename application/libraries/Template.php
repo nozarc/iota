@@ -14,10 +14,12 @@ class Template
 	}
 	public function display($content,$data=null)
 	{
+		$localpath=$_SESSION['sess_level'];
 		$data['sysdb']=$this->ci->sysdb;
+		$data['base_url']=$this->ci->config->item('base_url');
 		$data['me']=$this->ci->users->get_person($_SESSION['sess_uid'])->row();
 		$data['_tpath']=$this->ci->config->item('template');
-		$data['_content']=$this->ci->load->view('template/content/'.$content,$data,true);
+		$data['_content']=$this->ci->load->view('template/content/'.$localpath.'/'.$content,$data,true);
 		$data['_header']=$this->ci->load->view('template/header',$data,true);
 		$data['_footer']=$this->ci->load->view('template/footer',$data,true);
 		$data['_sidebar']=$this->ci->load->view('template/sidebar',$data,true);

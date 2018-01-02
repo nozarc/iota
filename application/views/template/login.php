@@ -54,7 +54,7 @@
            // echo form_button($btn);
             ?>
           <!--  <form> -->
-              <h1>Login Form</h1>
+              <h1>Login</h1>
               <div>
               <?php echo form_input($username);?>
               </div>
@@ -81,7 +81,7 @@
                 <div>
                   <h1><i class="fa fa-pie-chart"></i> IoTA - Items of Objective Test Analyzer</h1>
                   <p>©2016 All Rights Reserved. <br> 
-                  IoTA is an objective test items analyzer, which able to identify your objective tests are good to distinguish between smart student and unsmart student or not </p>
+                  IoTA is an objective test items analyzer, which able to identify your objective tests are good to distinguish between upper and lower group of student or not </p>
                 </div>
               </div>
               <?php form_close('</form>');?>

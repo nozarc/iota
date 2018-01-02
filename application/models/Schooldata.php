@@ -23,7 +23,7 @@ class Schooldata extends CI_Model
 				);
 			foreach ($keys as $key) 
 				{
-					$this->db->set('keyword',$key)->insert($this->db->db->dbprefix.'schooldata');
+				@	$this->db->set('keyword',$key)->insert($this->db->db->dbprefix.'schooldata');
 				}
 		}
 	public function checkkey()

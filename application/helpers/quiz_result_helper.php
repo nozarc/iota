@@ -86,8 +86,7 @@ function score($data_x=null,$data_y=null,$data_z=null,$method=null)
 }
 function analyze($data_x=null,$data_y=null,$data_z=null)
 {
-	$student=array_merge($data_y['upper'],$data_y['lower']);
-	sort($student);
+	$student=$data_y['all'];
 	$uppergroup=$data_y['upper'];
 	$lowergroup=$data_y['lower'];
 	$totalstudent=count($student);
@@ -108,18 +107,23 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 
 		///difficulty level//
 		foreach ($student as $k1 => $v1) {
+			
 			//part of validity test
 			$total_all_score=$total_all_score+$v1['score'];
 			//end of part of validity test
+			
 			if ($value==$v1['answer'][$key]) {
 				$total_correct_student=$total_correct_student+1;
+				$analyze[$key]['correct_student'][]=$v1['user_id'];
+
 				//part of validity test
 				$student_score[$v1['user_id']]=$v1['score'];
 				$total_quiz_score=$v1['score']+$total_quiz_score;
 				//end of part of validity test
+			
 			}
 		}
-		//end of part of validity test
+
 		$analyze[$key]['total_correct_student']=$total_correct_student;
 		$difficult_coefficient=number_format($total_correct_student/$totalstudent, 2);
 		$analyze[$key]['difficulty_level']['coefficient']=$difficult_coefficient;
@@ -149,7 +153,9 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 			}
 		}
 		$analyze[$key]['totalcorrectupper']=$totalcorrectupper;
+		$analyze[$key]['totalupper']=$totalupper;
 		$analyze[$key]['totalcorrectlower']=$totalcorrectlower;
+		$analyze[$key]['totallower']=$totallower;
 		$distinguish_coefficient=number_format(($totalcorrectupper/$totalupper)-($totalcorrectlower/$totallower),2);
 		$analyze[$key]['distinguish_power']['coefficient']=$distinguish_coefficient;
 		switch (true) {
@@ -184,19 +190,19 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 			$Mt=0;
 		}
 		foreach ($student as $k2 => $v2) {
-			$x_sqrd=pow(($Mt-$v2['score']),2);
+			$x_sqrd=pow(($v2['score']-$Mt),2);
 			$X_sqrd[$v2['user_id']]=$x_sqrd;
 			$sum_X=$x_sqrd+$sum_X;
 		}
 		$p=$total_correct_student/$totalstudent;
 		$q=1-$p;
-		$sqrtpq=sqrt($p/$q);
+	@	$sqrtpq=sqrt($p/$q); //warning, division by zero, seharusnya engga karena berupa desimal bukan 0
 		$St=sqrt($sum_X/$totalstudent);
 		$df=$totalstudent-2;
-		$Rpbi=(($Mp-$Mt)/$St)*sqrt($p/$q);
+		$Rpbi=(($Mp-$Mt)/$St)*$sqrtpq;
 		$t_table=PHPExcel_Calculation_Statistical::TINV((5/100),$df); // you need to load excel library first
-		$r_table=$t_table/sqrt($df+pow($t_table,2));
-		if ($Rpbi>$r_table) {
+	@	$r_table=$t_table/sqrt($df+pow($t_table,2));
+		if (@$Rpbi>$r_table) {
 			$validity='Valid';
 		}
 		else $validity='Invalid';
@@ -204,6 +210,23 @@ function analyze($data_x=null,$data_y=null,$data_z=null)
 		$analyze[$key]['r_table']=$r_table;
 		$analyze[$key]['validity']['classification']=$validity;
 		///end of validity test
+		//log for debugging
+		$analyze[$key]['log']['total_all_score']=$total_all_score;
+		$analyze[$key]['log']['totalstudent']=$totalstudent;
+		$analyze[$key]['log']['Mt']=$Mt;
+		$analyze[$key]['log']['total_quiz_score']=$total_quiz_score;
+		$analyze[$key]['log']['total_correct_student']=$total_correct_student;
+		$analyze[$key]['log']['Mp']=$Mp;
+		$analyze[$key]['log']['X_sqrd']=$X_sqrd;
+		$analyze[$key]['log']['sum_X_sqrd']=$sum_X;
+		$analyze[$key]['log']['St']=$St;
+		$analyze[$key]['log']['sqrtpq']=$sqrtpq;
+		$analyze[$key]['log']['Rpbi']=$Rpbi;
+		$analyze[$key]['log']['p']=$p;
+		$analyze[$key]['log']['q']=$q;
+		$analyze[$key]['log']['t_table']=$t_table;
+		$analyze[$key]['log']['r_table']=$r_table;
+		//end of log for debugging
 	}
 
 //	$analyze['data_y']=$data_y;

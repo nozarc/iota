@@ -36,118 +36,164 @@
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content <?php if(count($quiz['answer_key'])>15){echo "pre-scrollable";} ?>">
-                    <table id="datatable-fixed-header" class="table table-hover table-condensed table-bordered " >
-                              <style type="text/css">
-                                th{
-                                  text-align: center;
-                                }
-                                td.answer{
-                                  text-align: center;
-                                }
-                              </style>
-                              <script>
-                                $(document).ready(function(){
-                                    $('[data-toggle="tooltip"]').tooltip(); 
-                                });
-                              </script>
-                              <thead>
-                                <tr>
-                                  <th rowspan="2">No.</th>
-                                  <th rowspan="2">Student</th>
-                                  <th colspan="<?php echo count($quiz['answer_key']); ?>">No. Quiz</th>
-                                  <th rowspan="2">Correct<br>Answer</th>
-                                  <th rowspan="2">Score</th>
-                                  <th rowspan="2">Alphabetical<br>Score</th>
-                                </tr>
-                                <tr>
-                                <?php
-                                  for ($i=1; $i <= count($quiz['answer_key']); $i++) { 
-                                ?>
-                                  <th><?php echo $i; ?></th>
-                                <?php 
-                                  }
-                                ?>
-                                </tr>
-                              </thead>
-                              <tbody>
-                              <?php 
-                                $pass=0;
-                                $alphax['a']=0;$alphax['a_minus']=0;$alphax['b']=0;$alphax['b_minus']=0;
-                                $alphax['c']=0;$alphax['c_minus']=0;$alphax['d']=0;$alphax['d_minus']=0;
-                                $alphax['e']=0;$alphax['e_minus']=0;
-                                foreach ($student as $key => $value) {
-                                  $num=$key+1;
-                                  $show_score=$score[$student[$key]['uid']]['score'];
-                                  $show_correct=$score[$student[$key]['uid']]['correct'];
-                                  $show_alpha=$score[$student[$key]['uid']]['alpha'];
-                                  $show_status=$score[$student[$key]['uid']]['status'];
-                                ?>
-                                  <tr>
-                                    <th scope="row"><?php echo $num; ?></th>
-                                    <td ><?php echo $student[$key]['name']; ?></td>
+                  <div class="x_content">
+                    <table id="datatable-fixed-header2" class="table table-hover table-condensed table-bordered dt-responsive nowrap " >
+                      <style type="text/css">
+                        th{
+                          text-align: center;
+                        }
+                        td.answer{
+                          text-align: center;
+                        }
+                      </style>
+                      <thead>
+                        <tr>
+                          <th>No.</th>
+                          <th>Student</th>
+                          <th>Correct Answer</th>
+                          <th>Score</th>
+                          <th>Alphabetical Score</th>
+                          <th>Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <?php 
+                        $pass=0;
+                        $alphax['a']=0;$alphax['a_minus']=0;$alphax['b']=0;$alphax['b_minus']=0;
+                        $alphax['c']=0;$alphax['c_minus']=0;$alphax['d']=0;$alphax['d_minus']=0;
+                        $alphax['e']=0;$alphax['e_minus']=0;
+                        foreach ($student as $key => $value) {
+                          $num=$key+1;
+                          $show_score=$score[$student[$key]['uid']]['score'];
+                          $show_correct=$score[$student[$key]['uid']]['correct'];
+                          $show_alpha=$score[$student[$key]['uid']]['alpha'];
+                          $show_status=$score[$student[$key]['uid']]['status'];
+                        ?>
+                          <tr>
+                            <th scope="row"><?php echo $num; ?></th>
+                            <td ><?php echo $student[$key]['name']; ?></td>
+                            <td class="answer"><?php echo $show_correct; ?></td>
+                            <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":"alert alert-success";?>"><?php echo $show_score;//."/".$show_status; ?></td>
+                            <td class="answer" ><?php echo $show_alpha; ?></td>
+                            <td class="answer"><button class="btn btn-xs btn-primary" data-toggle='modal' data-target='#detail_<?php echo $value['uid'];?>' ><span class="fa fa-eye"></span> View</button></td>
+                          </tr>
+                        <?php
+                          if ($show_status=='Pass') {
+                            $pass=$pass+1;
+                          }
+                          switch (true) {
+                            case ($show_alpha=='A'):
+                              $alphax['a']++;
+                              break;
+                            case ($show_alpha=='A-'):
+                              $alphax['a_minus']++;
+                              break;
+                            case ($show_alpha=='B'):
+                              $alphax['b']++;
+                              break;
+                            case ($show_alpha=='B-'):
+                              $alphax['b_minus']++;
+                              break;
+                            case ($show_alpha=='C'):
+                              $alphax['c']++;
+                              break;
+                            case ($show_alpha=='C-'):
+                              $alphax['c_minus']++;
+                              break;
+                            case ($show_alpha=='D'):
+                              $alphax['d']++;
+                              break;
+                            case ($show_alpha=='D-'):
+                              $alphax['d_minus']++;
+                              break;
+                            case ($show_alpha=='E'):
+                              $alphax['e']++;
+                              break;
+                            case ($show_alpha=='E-'):
+                              $alphax['e_minus']++;
+                              break;
+                          }
+                        }
+
+                        foreach ($alphax as $alphkey => $alphval) {
+                          $alpha[]=$alphval;
+                        }
+                        $alpha=json_encode($alpha);
+                        $totalstudent=$num;
+                        $notpass=$totalstudent-$pass;
+                      ?>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div id="modals">
+                    <?php
+                      foreach ($student as $kdetail => $vdetail) {
+                        $totalAnswer=count($vdetail['answer']);
+                      ?>
+                        <div class="modal fade" id="detail_<?php echo $vdetail['uid']; ?>">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="<?php echo $vdetail['name'];?>"><?php echo $vdetail['name'];?>'s Result Detail</h4>
+                              </div>
+                              <div class="modal-body">
+                              <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Name: <?php echo $vdetail['name'];?></h5></div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                  <h5>
+                                  <span class=" label <?php echo ($score[$vdetail['uid']]['score']<$analyze->min_score)?'label-danger':'label-success';?>">
+                                    <?php echo $score[$vdetail['uid']]['status'];?>
+                                  </span>
+                                  </h5>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Correct/Total Quiz: <?php echo $score[$vdetail['uid']]['correct'];?> / <?php echo $totalAnswer ?></h5></div>
+                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Score: <?php echo $score[$vdetail['uid']]['score'];?> / <?php echo $score[$vdetail['uid']]['alpha'];?></h5></div>
+                              </div>
+                                <table class="table table-striped table-condensed table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th colspan="<?php echo $totalAnswer*2; ?>">Answer</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
                                   <?php
-                                    foreach ($student[$key]['answer'] as $no => $ans) {
-                                      if ($ans!=$quiz['answer_key'][$no]) {
-                                        $alert='alert alert-danger';
+                                    $ansChunked=array_chunk($vdetail['answer'], 10,true);
+                                    for ($tr=0; $tr < count($ansChunked); $tr++) { 
+                                    ?>
+                                    <tr>
+                                      <?php
+                                      foreach ($ansChunked[$tr] as $nodetail => $ansdetail) {
+                                        if ($ansdetail!=$quiz['answer_key'][$nodetail]) {
+                                          $alertDetail='alert alert-danger';
+                                        }
+                                        ?>
+                                        <th><?php echo $nodetail; ?></th>
+                                        <td class="answer <?php echo !empty($alertDetail)?$alertDetail:null; ?>"><?php echo $ansdetail; ?></td>
+                                        <?php
+                                        unset($alertDetail);
                                       }
-                                  ?>
-                                    <td class="answer <?php echo isset($alert)?$alert:null; ?>"><?php echo $ans; ?></td>
-                                  <?php
-                                    unset($alert);
+                                      ?>
+                                    </tr>
+                                    <?php
                                     }
                                   ?>
-                                    <td class="answer"><?php echo $show_correct; ?></td>
-                                    <td class="answer <?php echo ($show_score<$analyze->min_score)?"alert alert-danger":"alert alert-success";?>"><?php echo $show_score;//."/".$show_status; ?></td>
-                                    <td class="answer" ><?php echo $show_alpha; ?></td>
-                                  </tr>
-                                <?php
-                                  if ($show_status=='Pass') {
-                                    $pass=$pass+1;
-                                  }
-                                  switch (true) {
-                                    case ($show_alpha=='A'):
-                                      $alphax['a']++;
-                                      break;
-                                    case ($show_alpha=='A-'):
-                                      $alphax['a_minus']++;
-                                      break;
-                                    case ($show_alpha=='B'):
-                                      $alphax['b']++;
-                                      break;
-                                    case ($show_alpha=='B-'):
-                                      $alphax['b_minus']++;
-                                      break;
-                                    case ($show_alpha=='C'):
-                                      $alphax['c']++;
-                                      break;
-                                    case ($show_alpha=='C-'):
-                                      $alphax['c_minus']++;
-                                      break;
-                                    case ($show_alpha=='D'):
-                                      $alphax['d']++;
-                                      break;
-                                    case ($show_alpha=='D-'):
-                                      $alphax['d_minus']++;
-                                      break;
-                                    case ($show_alpha=='E'):
-                                      $alphax['e']++;
-                                      break;
-                                    case ($show_alpha=='E-'):
-                                      $alphax['e_minus']++;
-                                      break;
-                                  }
-                                }
-
-                                foreach ($alphax as $alphkey => $alphval) {
-                                  $alpha[]=$alphval;
-                                }
-                                  $alpha=json_encode($alpha);
-                                $totalstudent=$num;
-                                $notpass=$totalstudent-$pass;
-                              ?>
-                              </tbody>
-                    </table>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      <?php
+                      }
+                    ?>
                   </div>
                 </div>
               </div>
@@ -164,7 +210,7 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-                    <table id="datatable-fixed-header2" class="table table-striped table-bordered dt-responsive nowrap">
+                    <table id="datatable-fixed-header" class="table table-striped table-bordered dt-responsive nowrap">
                       <thead>
                         <tr>
                           <th rowspan="2">Question<br>No.</th>

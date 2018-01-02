@@ -22,7 +22,7 @@ class Index extends CI_Controller
 			redirect($this->access->level());
 		}
 		
-		$this->form_validation->set_rules('username','Username','required|alpha');
+		$this->form_validation->set_rules('username','Username','required');
 		$this->form_validation->set_rules('password','Password','required');
 		$this->form_validation->set_rules('token','token','callback_cek_login');
 		if ($this->form_validation->run()) 
