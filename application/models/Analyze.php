@@ -9,7 +9,7 @@ class Analyze extends CI_Model
 		{
 			parent::__construct();
 			$this->load->database('default');
-			$this->load->helper('db_batch','quiz_result');
+			$this->load->helper('teacher/db_batch','teacher/quiz_result');
 		}
 	public function show_all($value=null)
 	{

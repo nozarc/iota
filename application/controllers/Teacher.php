@@ -8,7 +8,7 @@ class Teacher extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('url','form','db_batch','quiz_result','obj_to_array'));
+		$this->load->helper(array('url','form','teacher/db_batch','teacher/quiz_result','general/obj_to_array'));
 		$this->load->model(array('users','schooldata','analyze'));
 		$this->load->library(array('form_validation','access','template','pagination','table','image_lib','excel'));
 		if ($this->access->level()!='teacher') 
@@ -331,7 +331,7 @@ class Teacher extends CI_Controller
 					$data['group']=batch_build($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'classgroup');
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
 					$data['result']=analyze($data['quiz'],$data['group']);
-				//	$data['lol']['student']=$data['group'];
+					$data['lol']['quiz']=$data['quiz'];
 				//	$data['lol']['result']=analyze($data['quiz'],$data['group']);
 				//	$data['lol']['student']=$data['student'];
 					$this->template->display('analyzeresult',$data);

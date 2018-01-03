@@ -139,50 +139,82 @@
                                 <h4 class="modal-title" id="<?php echo $vdetail['name'];?>"><?php echo $vdetail['name'];?>'s Result Detail</h4>
                               </div>
                               <div class="modal-body">
-                              <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Name: <?php echo $vdetail['name'];?></h5></div>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                  <h5>
-                                  <span class=" label <?php echo ($score[$vdetail['uid']]['score']<$analyze->min_score)?'label-danger':'label-success';?>">
-                                    <?php echo $score[$vdetail['uid']]['status'];?>
-                                  </span>
-                                  </h5>
+                                <div class="row">
+                                  <div class="col-md-6 col-sm-6 col-xs-12"><h5>Name: <?php echo $vdetail['name'];?></h5></div>
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <h5>
+                                    <span class=" label <?php echo ($score[$vdetail['uid']]['score']<$analyze->min_score)?'label-danger':'label-success';?>">
+                                      <?php echo $score[$vdetail['uid']]['status'];?>
+                                    </span>
+                                    </h5>
+                                  </div>
                                 </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Correct/Total Quiz: <?php echo $score[$vdetail['uid']]['correct'];?> / <?php echo $totalAnswer ?></h5></div>
-                                <div class="col-md-6 col-sm-6 col-xs-12"><h5>Score: <?php echo $score[$vdetail['uid']]['score'];?> / <?php echo $score[$vdetail['uid']]['alpha'];?></h5></div>
-                              </div>
-                                <table class="table table-striped table-condensed table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th colspan="<?php echo $totalAnswer*2; ?>">Answer</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                  <?php
-                                    $ansChunked=array_chunk($vdetail['answer'], 10,true);
-                                    for ($tr=0; $tr < count($ansChunked); $tr++) { 
-                                    ?>
-                                    <tr>
-                                      <?php
-                                      foreach ($ansChunked[$tr] as $nodetail => $ansdetail) {
-                                        if ($ansdetail!=$quiz['answer_key'][$nodetail]) {
-                                          $alertDetail='alert alert-danger';
-                                        }
-                                        ?>
-                                        <th><?php echo $nodetail; ?></th>
-                                        <td class="answer <?php echo !empty($alertDetail)?$alertDetail:null; ?>"><?php echo $ansdetail; ?></td>
+                                <div class="row">
+                                  <div class="col-md-6 col-sm-6 col-xs-12"><h5>Correct/Total Quiz: <?php echo $score[$vdetail['uid']]['correct'];?> / <?php echo $totalAnswer ?></h5></div>
+                                  <div class="col-md-6 col-sm-6 col-xs-12"><h5>Score: <?php echo $score[$vdetail['uid']]['score'];?> / <?php echo $score[$vdetail['uid']]['alpha'];?></h5></div>
+                                </div>
+                                <div class="accordion" id="accordion_<?php echo $vdetail['uid']; ?>" aria-multiselectable="true">
+                                  <div class="panel">
+                                    <a href="#answer_<?php echo $vdetail['uid'];?>" class="panel-heading" data-toggle='collapse' parent='accordion_<?php echo $vdetail['uid'];?>' id='headOne_<?php echo $vdetail['uid'];?>' aria-expanded="true" aria-controls="answer_<?php echo $vdetail['uid'];?>">
+                                      <h4 class="panel-title" >Answer</h4>
+                                    </a>
+                                    <div id="answer_<?php echo $vdetail['uid'];?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headOne_<?php echo $vdetail['uid'];?>">
+                                      <table class="table table-striped table-condensed table-bordered">
+                                        <thead>
+                                          <tr>
                                         <?php
-                                        unset($alertDetail);
-                                      }
-                                      ?>
-                                    </tr>
-                                    <?php
-                                    }
-                                  ?>
-                                  </tbody>
-                                </table>
+                                          $ansChunked=array_chunk($vdetail['answer'], 10,true);
+                                          if ($totalAnswer<10) {
+                                            $loop=$totalAnswer;
+                                          }
+                                          else{
+                                            $loop=10;
+                                          }
+                                          for ($th=1; $th <= $loop; $th++) { 
+                                        ?>
+                                            <th>No.</th>
+                                            <th>Ans</th>
+                                        <?php
+                                          }
+                                        ?>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                          for ($tr=0; $tr < count($ansChunked); $tr++) { 
+                                          ?>
+                                          <tr>
+                                            <?php
+                                            foreach ($ansChunked[$tr] as $nodetail => $ansdetail) {
+                                              if ($ansdetail!=$quiz['answer_key'][$nodetail]) {
+                                                $alertDetail='alert alert-danger';
+                                              }
+                                              ?>
+                                              <th><?php echo $nodetail; ?></th>
+                                              <td class="answer <?php echo !empty($alertDetail)?$alertDetail:null; ?>"><?php echo $ansdetail; ?></td>
+                                              <?php
+                                              unset($alertDetail);
+                                            }
+                                            ?>
+                                          </tr>
+                                          <?php
+                                          }
+                                        ?>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  <div class="panel">
+                                    <a href="#remedial_<?php echo $vdetail['uid'];?>" class="panel-heading" data-toggle='collapse' parent='accordion_<?php echo $vdetail['uid'];?>' id='headTwo_<?php echo $vdetail['uid'];?>' aria-expanded="true" aria-controls="remedial_<?php echo $vdetail['uid'];?>">
+                                      <h4 class="panel-title" >Remedial</h4>
+                                    </a>
+                                    <div id="remedial_<?php echo $vdetail['uid'];?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headTwo_<?php echo $vdetail['uid'];?>">
+                                      <pre>
+                                        test it out
+                                      </pre>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
