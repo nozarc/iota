@@ -1,7 +1,7 @@
         <div class="col-md-3 left_col">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="<?php echo base_url(); ?>" class="site_title"><i class="fa fa-pie-chart"></i> <span>IoTA | <?php echo ucfirst($sess_level);?></span></a><br>
+              <a href="<?php echo base_url(); ?>" class="site_title"><i class="fa fa-pie-chart"></i> <span>TiA | <?php echo ucfirst($sess_level);?></span></a><br>
             </div>
 
             <div class="clearfix"></div>

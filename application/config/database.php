@@ -106,6 +106,7 @@ $config['createdb']=array(
 	);
 $config['sidebar']=array(
 		array(
+			'id'	=>'1',
 			'name' =>'Home',
 			'href' =>'admin',
 			'class' =>'fa fa-home',
@@ -114,6 +115,7 @@ $config['sidebar']=array(
 			'owner' =>'admin'
 			),
 		array(
+			'id'	=>'2',
 			'name' 		=>'Users',
 			'href' 		=>null,
 			'class' 	=>'fa fa-users',
@@ -122,6 +124,7 @@ $config['sidebar']=array(
 			'owner' 	=>'admin'
 			),
 		array(
+			'id'	=>'3',
 			'name' =>'School Data',
 			'href' =>null,
 			'class' =>'fa fa-university',
@@ -130,6 +133,7 @@ $config['sidebar']=array(
 			'owner' =>'admin'
 			),
 		array(
+			'id'	=>'4',
 			'name' =>'Home',
 			'href' =>'teacher',
 			'class' =>'fa fa-home',
@@ -138,6 +142,7 @@ $config['sidebar']=array(
 			'owner' =>'teacher'
 			),
 		array(
+			'id'	=>'5',
 			'name' =>'Analyze Quiz',
 			'href' =>null,
 			'class' =>'fa fa-area-chart',
@@ -146,6 +151,7 @@ $config['sidebar']=array(
 			'owner' =>'teacher'
 			),
 		array(
+			'id'	=>'6',
 			'name' =>'Quiz',
 			'href' =>null,
 			'class' =>'fa fa-cogs',
@@ -154,12 +160,40 @@ $config['sidebar']=array(
 			'owner' =>'teacher'
 			),
 		array(
+			'id'	=>'7',
 			'name' =>'Profile',
 			'href' =>'teacher/profile',
 			'class' =>'fa fa-user',
 			'class_2'	=>'fa fa-chevron-down',
 			'parent' =>'7',
 			'owner' =>'teacher'
+			),
+		array(
+			'id'	=>'8',
+			'name' =>'Home',
+			'href' =>'student',
+			'class' =>'fa fa-user',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' =>'8',
+			'owner' =>'student'
+			),
+		array(
+			'id'	=>'9',
+			'name' =>'Quiz',
+			'href' =>null,
+			'class' =>'fa fa-user',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' =>'9',
+			'owner' =>'student'
+			),
+		array(
+			'id'	=>'10',
+			'name' =>'Profile',
+			'href' =>'student/profile',
+			'class' =>'fa fa-user',
+			'class_2'	=>'fa fa-chevron-down',
+			'parent' =>'10',
+			'owner' =>'student'
 			),
 		array(
 			'name' =>'View Users',
@@ -197,14 +231,14 @@ $config['sidebar']=array(
 			'owner' =>'admin'
 			),
 		array(
-			'name' =>'New Analyze',
+			'name' =>'New',
 			'href' =>'teacher/analyze/new',
 			'class' =>null,
 			'parent' =>'5',
 			'owner' =>'teacher'
 			),
 		array(
-			'name' =>'List of Analyze',
+			'name' =>'List',
 			'href' =>'teacher/analyze/list',
 			'class' =>null,
 			'parent' =>'5',
@@ -216,5 +250,12 @@ $config['sidebar']=array(
 			'class' =>null,
 			'parent' =>'6',
 			'owner' =>'teacher'
+			),
+		array(
+			'name' =>'List',
+			'href' =>'student/quiz/list',
+			'class' =>null,
+			'parent' =>'9',
+			'owner' =>'student'
 			)
 	);

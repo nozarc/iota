@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>IoTA | Items of Objective Test Analyzer </title>
+    <title>TiA | Test Items Analyzer </title>
 
     <!-- Bootstrap -->
     <link href="<?php echo $_tpath; ?>/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -79,9 +79,9 @@
                 <br />
 
                 <div>
-                  <h1><i class="fa fa-pie-chart"></i> IoTA - Items of Objective Test Analyzer</h1>
-                  <p>©2016 All Rights Reserved. <br> 
-                  IoTA is an objective test items analyzer, which able to identify your objective tests are good to distinguish between upper and lower group of student or not </p>
+                  <h1><i class="fa fa-pie-chart"></i> TiA - Test Items Analyzer</h1>
+                  <p>©2017 All Rights Reserved.<br> 
+                  TiA is an objective test items analyzer, which able to identify your objective tests are good to distinguish between upper and lower group of student or not </p>
                 </div>
               </div>
               <?php form_close('</form>');?>
@@ -95,7 +95,7 @@
           <div>
             <p>
               [lorem ipsum sir dolor amit amit] <br>
-              Please contact your awesome IOta administrator to reset your forgotten password
+              Please contact your awesome TiA administrator to reset your forgotten password
             </p>
           </div>
 <!--          
@@ -125,9 +125,9 @@
                 <br />
 
                 <div>
-                  <h1><i class="fa fa-pie-chart"></i> IOta - Item of Objective Test Analyzer</h1>
-                  <p>©2016 All Rights Reserved. <br> 
-                  IoTA is an objective test items analyzer, which usable to identify your tests are good to distinguish between smart and stupid student or not </p>
+                  <h1><i class="fa fa-pie-chart"></i> TiA - Test Items Analyzer</h1>
+                  <p>©2017 All Rights Reserved. <br> 
+                  TiA is an objective test items analyzer, which usable to identify your tests are good to distinguish between smart and stupid student or not </p>
                 </div>
               </div>
             </form>

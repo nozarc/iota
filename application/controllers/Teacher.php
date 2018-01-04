@@ -331,7 +331,7 @@ class Teacher extends CI_Controller
 					$data['group']=batch_build($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'classgroup');
 					$data['score']=batch_unbuild($this->analyze->get_score($data_x),score($data['student'],$data['quiz'],$this->analyze->show($data_x,$sess_uid),'info'),'score');
 					$data['result']=analyze($data['quiz'],$data['group']);
-					$data['lol']['quiz']=$data['quiz'];
+				//	$data['lol']['quiz']=$data['quiz'];
 				//	$data['lol']['result']=analyze($data['quiz'],$data['group']);
 				//	$data['lol']['student']=$data['student'];
 					$this->template->display('analyzeresult',$data);

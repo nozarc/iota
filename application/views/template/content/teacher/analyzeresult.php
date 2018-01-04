@@ -188,6 +188,9 @@
                                             foreach ($ansChunked[$tr] as $nodetail => $ansdetail) {
                                               if ($ansdetail!=$quiz['answer_key'][$nodetail]) {
                                                 $alertDetail='alert alert-danger';
+                                                $remedial[$nodetail]['measure']=$quiz['measured_capability'][$nodetail];
+                                                $remedial[$nodetail]['quiz']=$quiz['question'][$nodetail];
+                                                ksort($remedial,true);
                                               }
                                               ?>
                                               <th><?php echo $nodetail; ?></th>
@@ -209,9 +212,27 @@
                                       <h4 class="panel-title" >Remedial</h4>
                                     </a>
                                     <div id="remedial_<?php echo $vdetail['uid'];?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headTwo_<?php echo $vdetail['uid'];?>">
-                                      <pre>
-                                        test it out
-                                      </pre>
+                                      <table class="table table-striped table-condensed">
+                                        <thead>
+                                          <tr>
+                                            <th>Question No.</th>
+                                            <th>Measured Capability</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                          foreach ($remedial as $rkey => $rval) {
+                                          ?>
+                                          <tr>
+                                            <td><?php echo $rkey; ?></td>
+                                            <td><?php echo $rval['measure']; ?></td>
+                                          </tr>
+                                          <?php
+                                          }
+                                          unset($remedial);
+                                        ?>
+                                        </tbody>
+                                      </table>
                                     </div>
                                   </div>
                                 </div>
