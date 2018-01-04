@@ -63,7 +63,7 @@ class Create_db extends CI_Model
 			gender enum("m","f") default null,
 			phone varchar(15),
 			userphoto text, 
-			email varchar(30),
+			email varchar(320),
 			class int(5) default null, foreign key (class) references '.$prefix.'classes(class_id) on update cascade on delete restrict
 			)');
 		$this->db->query('create table if not exists '.$prefix.'sidebar(
