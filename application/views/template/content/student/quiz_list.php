@@ -90,7 +90,34 @@
                                 <h4 class="modal-title" id="<?php echo $vdetail->subject; ?>" ><?php echo $vdetail->subject.' ('.$vdetail->test_type.')';?></h4>
                               </div>
                               <div class="modal-body">
-                                
+                                <div class="row">
+                                  <div class="col-sm-2 col-md-2 col-xs-4">
+                                    <h5>Subject</h5>
+                                  </div>
+                                  <div class="col-md-4 col-sm-4 col-xs-4">
+                                    <h5>: <?php echo $vdetail->subject; ?></h5>
+                                  </div>
+                                  <div class="col-md-2 col-sm-2 col-xs-4">
+                                    <h5>Test Date</h5>
+                                  </div>
+                                  <div class="col-md-4 col-sm-4 col-xs-4">
+                                    <h5>: <?php echo $test_date; ?></h5>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-sm-2 col-md-2 col-xs-4">
+                                    <h5>Test Type</h5>
+                                  </div>
+                                  <div class="col-md-4 col-sm-4 col-xs-4">
+                                    <h5>: <?php echo $vdetail->test_type; ?></h5>
+                                  </div>
+                                  <div class="col-md-2 col-sm-2 col-xs-4">
+                                    <h5>Score</h5>
+                                  </div>
+                                  <div class="col-md-4 col-sm-4 col-xs-4">
+                                    <h5>: <?php echo $vdetail->score; ?></h5>
+                                  </div>
+                                </div>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

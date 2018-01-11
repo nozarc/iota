@@ -9,7 +9,7 @@ class Student extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('url','form','db_batch','quiz_result','obj_to_array'));
+		$this->load->helper(array('url','form','student/batch','general/obj_to_array'));
 		$this->load->model(array('users','schooldata','quiz'));
 		$this->load->library(array('form_validation','access','template','table','image_lib','excel'));
 		if ($this->access->level()!='student') 
