@@ -74,7 +74,7 @@
                               'name'    =>'userphoto',
                               'accept'  => 'image/*',
                             );
-                          echo form_upload($attphoto); // belum kelar, dota sik
+                          echo form_upload($attphoto); 
                           ?>
 
                         </div>
