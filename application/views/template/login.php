@@ -21,6 +21,14 @@
   </head>
 
   <body class="login">
+<?php 
+	if(!empty($lol)){
+	echo '<pre>';
+	print_r($lol);
+	echo '</pre>';
+}
+?>
+
     <div>
       <a class="hiddenanchor" id="signup"></a>
       <a class="hiddenanchor" id="signin"></a>
@@ -127,7 +135,7 @@
                 <div>
                   <h1><i class="fa fa-pie-chart"></i> TiA - Test Items Analyzer</h1>
                   <p>©2017 All Rights Reserved. <br> 
-                  TiA is an objective test items analyzer, which usable to identify your tests are good to distinguish between smart and stupid student or not </p>
+                  TiA is an objective test items analyzer, which usable to identify your tests are good to distinguish between upper and lower group of student or not </p>
                 </div>
               </div>
             </form>
