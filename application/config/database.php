@@ -164,7 +164,7 @@ $config['sidebar']=array(
 			'name' =>'Profile',
 			'href' =>'teacher/profile',
 			'class' =>'fa fa-user',
-			'class_2'	=>'fa fa-chevron-down',
+			'class_2'	=>null,
 			'parent' =>'7',
 			'owner' =>'teacher'
 			),
