@@ -20,16 +20,7 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-<!--                  <pre>
-                    <?php
-                  //  print_r($user);
-                    echo "<br>";
-                    print_r(isset($lol)?$lol:null);
-                    echo "<br>";
-                    print_r(isset($done)?$done:null);
-                   ?>
-                  </pre>
--->                 <!--user photo-->
+                <!--user photo-->
                     <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                       <div class="profile_img">
                         <div id="crop-avatar">
@@ -42,7 +33,7 @@
                           }
                           else
                           {
-                            echo $me->userphoto;
+                            echo $_tpath.$me->userphoto;
                           }
                           ?>
                           " alt="User Photo" title="Change your photo" style='height:200px; width:200px'>

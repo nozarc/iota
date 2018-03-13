@@ -221,15 +221,17 @@
                                         </thead>
                                         <tbody>
                                         <?php
-                                          foreach ($remedial as $rkey => $rval) {
-                                          ?>
-                                          <tr>
-                                            <td><?php echo $rkey; ?></td>
-                                            <td><?php echo $rval['measure']; ?></td>
-                                          </tr>
-                                          <?php
+                                          if (!empty($remedial)) {
+                                            foreach ($remedial as $rkey => $rval) {
+                                            ?>
+                                            <tr>
+                                              <td><?php echo $rkey; ?></td>
+                                              <td><?php echo $rval['measure']; ?></td>
+                                            </tr>
+                                            <?php
+                                            }
+                                            unset($remedial);
                                           }
-                                          unset($remedial);
                                         ?>
                                         </tbody>
                                       </table>

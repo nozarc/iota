@@ -5,6 +5,13 @@
 </head>
 <body class="nav-md">
 	<div class="container body">
+		<?php
+				if (isset($lol)) {
+					echo "<pre>";
+					print_r($lol);
+					echo "</pre>";
+				}
+			?>
 		<div class="main_container">
 			<!-- sidebar -->
 			<?php echo $_sidebar;?>

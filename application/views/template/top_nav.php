@@ -8,7 +8,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <img src="<?php echo $me->userphoto;?>" alt=""><?php echo ucfirst($sess_username);?>
+                    <img src="<?php echo $_tpath.$me->userphoto;?>" alt=""><?php echo ucfirst($sess_username);?>
                     <span class=" fa fa-angle-down"></span>
                   </a>
                   <ul class="dropdown-menu dropdown-usermenu pull-right">

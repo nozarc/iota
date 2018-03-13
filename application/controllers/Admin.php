@@ -16,7 +16,6 @@ class Admin extends CI_Controller
 		{
 			redirect('');
 		}
-	
 	} 
 	public function index()
 	{
@@ -39,12 +38,7 @@ class Admin extends CI_Controller
 		$this->form_validation->set_rules('uid','UID','required|integer');
 		$this->form_validation->set_rules('password','Password','matches[passwordconf]');
 		$this->form_validation->set_rules('passwordconf','Password Confirmation','matches[password]');
-	/*	$this->form_validation->set_rules('fullname','Name','callback_check_headmaster_name');
-	//	$this->form_validation->set_rules('identity_number','Identity Number','is_natural');
-	//	$this->form_validation->set_rules('gender','Gender','alpha');
-	//	$this->form_validation->set_rules('email','Email','valid_email');
-	//	$this->form_validation->set_rules('phone_num','Phone Number','numeric');
-	*/
+	
 		if ($this->form_validation->run())
 		{
 			if (empty($this->input->post('password',true))) {
@@ -178,14 +172,13 @@ class Admin extends CI_Controller
 					rename($this->config->item('template_dir').'images/'.$temp_photo, $newname);
 					$userphoto=array
 								(
-									'userphoto'	=>$this->config->item('template').'images/'.$sess_uid.'_photo.'.$ext,
+									'userphoto'	=>'images/'.$sess_uid.'_photo.'.$ext,
 								);
 					$this->users->update($sess_uid,null,$userphoto);
 					unset($_SESSION['temp_photo']);
 					redirect($sess_level.'/profile');
 				}
 				$data['done']=$done;
-				$data['lol']=$imgupload;
 				$this->template->display('userphoto',$data);
 			break;
 			case 'edit':

@@ -415,14 +415,13 @@ class Teacher extends CI_Controller
 					rename($this->config->item('template_dir').'images/'.$temp_photo, $newname);
 					$userphoto=array
 								(
-									'userphoto'	=>$this->config->item('template').'images/'.$sess_uid.'_photo.'.$ext,
+									'userphoto'	=>'images/'.$sess_uid.'_photo.'.$ext,
 								);
 					$this->users->update($sess_uid,null,$userphoto);
 					unset($_SESSION['temp_photo']);
 					redirect($sess_level.'/profile');
 				}
 				$data['done']=$done;
-				$data['lol']=$imgupload;
 				$this->template->display('userphoto',$data);
 			break;
 			case 'edit':

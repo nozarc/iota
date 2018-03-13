@@ -9,7 +9,7 @@
             <!-- menu profile quick info -->
             <div class="profile">
               <div class="profile_pic">
-                <img src="<?php echo $me->userphoto;?>" alt="..." class="img-circle profile_img">
+                <img src="<?php echo $_tpath.$me->userphoto;?>" alt="..." class="img-circle profile_img">
               </div>
               <div class="profile_info">
                 <span>Welcome,</span>
@@ -17,7 +17,6 @@
               </div>
             </div>
             <!-- /menu profile quick info -->
-
             <br />
 
             <!-- sidebar menu -->

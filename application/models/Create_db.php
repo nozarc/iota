@@ -142,7 +142,7 @@ class Create_db extends CI_Model
 										'password'=>$user['password']
 										))
 							->row()->uid,
-				'userphoto'	=>$this->config->item('template').'images/defaultphoto.png',
+				'userphoto'	=>'images/defaultphoto.png',
 						);
 			$this->db->set($person)->insert($prefix.'people');
 		}

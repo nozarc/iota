@@ -20,19 +20,12 @@
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
-<!--                  <pre>
-                    <?php
-/*                    print_r($user);
-                    echo "<br>";
-                    print_r($lol?$lol:null);
-*/                   ?>
-                  </pre>
--->                 <!--user photo-->
+                 <!--user photo-->
                     <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
                       <div class="profile_img">
                         <div id="crop-avatar">
                           <!-- Current avatar -->
-                          <img class="img-responsive avatar-view img-thumbnail img-rounded" src="<?php echo $me->userphoto;?>" alt="User Photo" title="Change your photo" style='height:200px; width:200px'>
+                          <img class="img-responsive avatar-view img-thumbnail img-rounded" src="<?php echo $_tpath.$me->userphoto;?>" alt="User Photo" title="Change your photo" style='height:200px; width:200px'>
                         </div>
                       </div>
                       <br>
