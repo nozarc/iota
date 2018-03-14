@@ -17,13 +17,6 @@
                 </div>
               </div>
             </div> 
-<?php echo empty($lol)?"<!--":null;?>
-      <pre>
-        <?php
-        print_r(!empty($lol)?$lol:null);
-        ?>
-      </pre>
-<?php echo empty($lol)?"-->":null;?> 
             <!-- /top tiles -->
             <div class="clearfix"></div>
 
@@ -31,7 +24,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>List of Quiz<small></small></h2>
+                    <h2>List of Quizzes Result<small></small></h2>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
@@ -116,6 +109,18 @@
                                   </div>
                                   <div class="col-md-4 col-sm-4 col-xs-4">
                                     <h5>: <?php echo $vdetail->score; ?></h5>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="accordion" id="accordion_<?php echo $vdetail->id;?>" aria-multiselectable="true">
+                                    <div class="panel">
+                                      <a href="#quizAnswer_<?php echo $vdetail->id;?>" class="panel-heading" data-toggle='collapse' parent='accordion_<?php echo $vdetail->id;?>' id='headOne_<?php echo $vdetail->id;?>;?>' aria-expanded="true" aria-controls="quizAnswer_<?php echo $vdetail->id;?>">
+                                        <h4 class="panel-title">Quiz and Answer</h4>
+                                      </a>
+                                      <div id="quizAnswer_<?php echo $vdetail->id;?>" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="headOne_<?php echo $vdetail->id;?>">
+                                        lol
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

@@ -425,8 +425,17 @@ class Teacher extends CI_Controller
 				$this->template->display('userphoto',$data);
 			break;
 			case 'edit':
-				$this->form_validation->set_rules('username','Username','required|callback_check_username');
-				$this->form_validation->set_rules('passwordconf','Password Confirmation','matches[password]');
+				if ($this->input->post('username',true)!=$sess_username) {
+						$callback_check_username='|callback_check_username';
+					}
+					else{
+						$callback_check_username=null;
+					}
+				$this->form_validation->set_rules('username','Username','required'.$callback_check_username);
+				if (!empty($this->input->post('password',true))) {
+					$this->form_validation->set_rules('password','Password','min_length[5]');
+					$this->form_validation->set_rules('passwordconf','Password Confirmation','matches[password]');
+				}
 				$this->form_validation->set_rules('fullname','Name','callback_check_headmaster_name');
 				$this->form_validation->set_rules('identity_number','Identity Number','is_natural');
 				$this->form_validation->set_rules('gender','Gender','alpha');
@@ -471,5 +480,35 @@ class Teacher extends CI_Controller
 			break;
 		}
 	}
-	
+	public function check_headmaster_name()
+	{
+		$headmaster=$this->input->post('level',true);
+		$fullname=$this->input->post('fullname',true);
+		if($headmaster=='headmaster' && empty($fullname))
+		{
+			$this->form_validation->set_message('check_headmaster_name','Sorry, we need Headmaster\'s {field}');
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	//	troubel ada pada cek fullname apakah sudah ada isinya atau belum
+	// 120517 kayaknya sudah beres, coba cek lagi
+	}
+	public function check_username()
+	{
+		$username=$this->input->post('username',true);
+		$uid=$this->input->post('uid',true);
+		if($this->users->check_username($username,$uid))
+		{
+			$this->form_validation->set_message('check_username','Sorry, {field} is already exists');
+			return false;
+		}
+		else
+		{
+			
+			return true;
+		}
+	}
 }

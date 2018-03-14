@@ -18,15 +18,6 @@
                     <h2>Edit School Data</h2>
                     <div class="clearfix"></div>
                   </div>
-<!--                  <pre>
-                    <?php
-                   // print_r($user);
-                    echo "<br>";
-                    print_r(isset($lol)?$lol:null);
-                    print_r($done=='done'?'<br>done':'<br>nothing done');
-                   ?>
-                  </pre>
- --> 
                     <div class="col-md-9 col-sm-9 col-xs-12">
                       <div class="x_content">
                           <?php
@@ -153,7 +144,7 @@
                             <!-- Current avatar -->
                             <img class=" avatar-view img-rounded" src="
                             <?php 
-                              echo isset($school['schoollogo'])?$school['schoollogo']:'school_logo.png'; // ganti logo defaultnya
+                              echo isset($school['schoollogo'])?$_tpath.$school['schoollogo']:$_tpath.'images/school_logo.png'; // ganti logo defaultnya
                             ?>
                             " alt="School Logo" title="Change School Logo" style='height:200px; width:200px'>
                           </div>

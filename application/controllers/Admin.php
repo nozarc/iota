@@ -315,7 +315,7 @@ class Admin extends CI_Controller
 							$this->image_lib->clear();
 							$_SESSION['temp_photo'] = $this->upload->data()['file_name'];
 							$data['lol']=$this->upload->data();
-							$logo=$this->config->item('template').'/images/'.$this->upload->data()['file_name'];
+							$logo='images/'.$this->upload->data()['file_name'];
 							$this->schooldata->update(array('schoollogo'=>$logo));
 							redirect($sess_level.'/schooldata/','refresh');
 						}
@@ -418,77 +418,6 @@ class Admin extends CI_Controller
 			
 			return true;
 		}
-	}
-	public function perkalian()
-	{
-/*		if ($this->access->is_login()===false) {
-			redirect('');
-		}
-*/		$this->load->model('oper_db');
-		$this->form_validation->set_rules('v1','Variabel 1','required|integer');
-		$this->form_validation->set_rules('v2','Variabel 2','required|integer');
-		if($this->form_validation->run())
-		{
-			$data['v1']=$this->input->post('v1',true);
-			$data['v2']=$this->input->post('v2',true);
-			$data['hasil']=$data['v1']*$data['v2'];
-			//extract($data);
-			$this->oper_db->input_log($data['v1'],$data['v2'],$data['hasil']);
-		}
-		else
-		{
-			$data['v1']="0";
-			$data['v2']="0";
-			$data['hasil']="0";
-		}
-		$data['outlog']=$this->oper_db->out_log()->result('array');
-		$data['d_error']='';
-		$this->load->view('perkalian',$data);
-		//$this->oper_db->tes_input('xxx','ssss','cccc');
-	}
-	
-	public function pembagian($offset=0,$column='uid',$ordertype='asc')
-	{
-		$limit=4;
-		$offset=empty($offset)?0:$offset;
-		$column=empty($column)?'uid':$column;
-		$ordertype=empty($ordertype)?'asc':$ordertype;
-		$users=$this->users->show_list($limit,$offset,$column,$ordertype)->result();
-		//pagination
-		$cfg['base_url']=site_url('admin/pembagian/');
-		$cfg['total_rows']=$this->users->count_all();
-		$cfg['per_page']=$limit;
-		$cfg['uri_segment']=3;
-		$this->pagination->initialize($cfg);
-		$data['page']=$this->pagination->create_links();
-
-		//table
-		$this->table->set_empty("&nbsp;");
-		$order=($ordertype=='asc'?'desc':'asc');
-		$this->table->set_heading(
-			'No',
-			anchor($cfg['base_url'].'/'.$offset.'/uid/'.$order,'Uid'),
-			anchor($cfg['base_url'].'/'.$offset.'/username/'.$order,'Username'),
-			anchor($cfg['base_url'].'/'.$offset.'/level/'.$order,'Level'),
-			anchor($cfg['base_url'].'/'.$offset.'/status/'.$order,'Status'),
-			'Actions'
-			);
-		$no=$offset;
-		foreach ($users as $user) {
-			$this->table->add_row(
-				++$no,
-				$user->uid,
-				$user->username,
-				$user->level,
-				$user->status,
-				anchor('hitung/view/'.$user->uid,'View'),
-				anchor('hitung/update/'.$user->uid,'Update'),
-				anchor('hitung/delete/'.$user->uid,'Delete',array('onclick'=>'return confirm("Are your sure to delete it?")'))
-				);
-		}
-		$data['table']=$this->table->generate();
-		$data['lol']=$users;
-		$this->load->view('pembagian',$data);
 	}
 	public function logout()
 	{

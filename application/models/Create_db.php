@@ -45,7 +45,7 @@ class Create_db extends CI_Model
 			)');
 		$this->db->query('
 			create table if not exists '.$prefix.'schooldata(
-			id int(2) primary key auto_increment,
+			id int(3) primary key auto_increment,
 			keyword varchar(30),
 			value text
 			)');
