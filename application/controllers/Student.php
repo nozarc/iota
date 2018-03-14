@@ -31,8 +31,6 @@ class Student extends CI_Controller
 			case 'list':
 				$data['table']=$this->quiz->show_all($sess_uid);
 				$data['quizWithAnswer']=batch_unbuild($this->quiz->get_quizWithAnswer($sess_uid),'quizWithAnswer');
-				$data['lol'][]=$data['table'];
-				$data['lol'][]=$data['quizWithAnswer'];
 				$this->template->display('quiz_list',$data);
 				break;
 			
